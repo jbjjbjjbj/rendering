@@ -2,16 +2,30 @@ cmake_minimum_required(VERSION 3.10)
 
 project(pathtracing)
 
+# cmake options
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_AUTOMOC ON)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Compiler options
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+FILE(GLOB app_sources ${CMAKE_SOURCE_DIR}/app/*.cpp)
 FILE(GLOB sources ${CMAKE_SOURCE_DIR}/src/*.cpp)
+FILE(GLOB test_sources ${CMAKE_SOURCE_DIR}/test/*.cpp)
 
-add_executable(pathtracing ${sources})
+add_executable(pathtracing ${sources} ${app_sources})
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+# Catch2 unittests
+add_custom_target(test)
+add_executable(run_test EXCLUDE_FROM_ALL ${sources} ${test_sources})
+target_include_directories(run_test PUBLIC src)
+add_dependencies(test run_test)
 
-# Detect and add SFML
-find_package(SFML 2 REQUIRED system window graphics)
-include_directories(${SFML_INCLUDE_DIR})
-target_link_libraries(pathtracing ${SFML_LIBRARIES} ${SFML_DEPENDENCIES})
+# Qt
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+target_link_libraries(pathtracing Qt5::Widgets)
