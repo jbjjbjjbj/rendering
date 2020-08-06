@@ -5,6 +5,8 @@
 #include <qwidget.h>
 
 class DrawWidget : public QWidget {
+    Q_OBJECT
+
     public:
         DrawWidget(unsigned width, unsigned height);
         void paintEvent(QPaintEvent*);

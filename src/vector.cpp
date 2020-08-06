@@ -1,6 +1,7 @@
 #include "vector.hpp"
 
 #include <math.h>
+#include <stdexcept>
 
 Vec3d::Vec3d() {
     set(0, 0, 0);
@@ -19,7 +20,7 @@ void Vec3d::set(double x, double y, double z) {
 void Vec3d::normalize() {
     auto len = length();
     if (len == 0) {
-        throw "Normalizing zero vector";
+        throw std::runtime_error("Normalizing zero vector");
     }
 
     m_x /= len;
@@ -33,6 +34,22 @@ double Vec3d::length() const {
 
 double Vec3d::dot(const Vec3d &vec) const {
     return m_x * vec.m_x + m_y * vec.m_y + m_z * vec.m_z;
+}
+
+Vec3d Vec3d::cross(const Vec3d &vec) const {
+    return Vec3d(
+        m_y * vec.m_z - m_z * vec.m_y,
+        m_z * vec.m_x - m_x * vec.m_z,
+        m_x * vec.m_y - m_y * vec.m_x
+        );
+}
+
+Vec3d Vec3d::operator+(const Vec3d &vec) const {
+    return Vec3d(
+            m_x + vec.m_x, 
+            m_y + vec.m_y,
+            m_z + vec.m_z
+            );
 }
 
 Vec3d Vec3d::operator-(const Vec3d &vec) const {
@@ -51,3 +68,11 @@ Vec3d Vec3d::operator-() const {
             );
 }
 
+
+Vec3d Vec3d::operator*(double op) const {
+    return Vec3d(
+            m_x * op,
+            m_y * op,
+            m_z * op
+            );
+}

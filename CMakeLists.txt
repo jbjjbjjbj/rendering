@@ -19,6 +19,7 @@ FILE(GLOB sources ${CMAKE_SOURCE_DIR}/src/*.cpp)
 FILE(GLOB test_sources ${CMAKE_SOURCE_DIR}/test/*.cpp)
 
 add_executable(pathtracing ${sources} ${app_sources})
+target_include_directories(pathtracing PUBLIC src)
 
 # Catch2 unittests
 add_custom_target(test)

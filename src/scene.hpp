@@ -6,9 +6,9 @@
 
 class Scene {
     public:
-        void addObject(Object &obj);
+        void addShape(const Shape *obj);
 
-        std::vector<Object*> objs;
+        std::vector<const Shape*> objs;
 
 };
 

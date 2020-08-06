@@ -1,8 +1,12 @@
 #include "mainwindow.hpp"
 
-MainWindow::MainWindow()
-    : drawer(500, 500) {
+MainWindow::MainWindow(Renderer r)
+    : m_drawer(500, 500),
+    m_render(this, m_drawer, r)
+{
 
-    setCentralWidget(&drawer);
+    setCentralWidget(&m_drawer);
+
+
 
 }

@@ -15,8 +15,10 @@ class Vec3d {
         Vec3d cross(const Vec3d &vec) const;
 
         // Operators
+        Vec3d operator+(const Vec3d &vec) const;
         Vec3d operator-(const Vec3d &vec) const;
         Vec3d operator-() const;
+        Vec3d operator*(double) const;
 
         double m_x, m_y, m_z;
 };

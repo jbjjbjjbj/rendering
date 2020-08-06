@@ -4,16 +4,18 @@
 #include <QMainWindow>
 
 #include "draw.hpp"
+#include "rendercoord.hpp"
+#include <render.hpp>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        MainWindow();
+        MainWindow(Renderer r);
 
     private:
-        DrawWidget drawer;
-
+        DrawWidget m_drawer;
+        RenderCoordinator m_render;
 };
 
 #endif

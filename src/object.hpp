@@ -8,17 +8,15 @@
 class Material {
 };
 
-class Object {
+class Shape {
     public:
         void setMaterial(std::shared_ptr<Material> m);
-
-        std::shared_ptr<Material> m_mat;
 
         virtual Vec3d norm_at(const Vec3d &point, const Vec3d &indir) const = 0;
         virtual double intersect(const Ray &ray, bool skip_dist) const = 0;
 };
 
-class Sphere : Object {
+class Sphere : public Shape {
     public:
         Sphere(Vec3d center, double radius);
         Vec3d norm_at(const Vec3d &point, const Vec3d &indir) const;
@@ -29,7 +27,7 @@ class Sphere : Object {
         double m_radius;
 };
 
-class Plane : Object {
+class Plane : public Shape {
     public:
         Plane(Vec3d start, Vec3d norm);
         Vec3d norm_at(const Vec3d &point, const Vec3d &indir) const;

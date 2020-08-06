@@ -1,6 +1,7 @@
 #include "object.hpp"
 
 #include <math.h>
+#include <iostream>
 #include "common.hpp"
 
 Sphere::Sphere(Vec3d center, double radius) {
@@ -13,10 +14,6 @@ Plane::Plane(Vec3d start, Vec3d norm) {
     m_norm = norm;
 
     m_norm.normalize();
-}
-
-void Object::setMaterial(std::shared_ptr<Material> m) {
-    m_mat = m;
 }
 
 Vec3d Sphere::norm_at(const Vec3d &point, const Vec3d&) const {
