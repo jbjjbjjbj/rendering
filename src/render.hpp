@@ -5,20 +5,6 @@
 #include "ray.hpp"
 #include "scene.hpp"
 
-class Color : public Vec3d {
-    public:
-        Color() {}
-        Color(const Vec3d &v) : Vec3d(v) {}
-        Color(double r, double g, double b) : Vec3d(r, g, b) {}
-
-        uint8_t r() { return m_x * 255; }
-        uint8_t g() { return m_y * 255; }
-        uint8_t b() { return m_z * 255; }
-
-        void clamp();
-
-};
-
 class Renderer {
     public:
     Renderer(const Scene &scn, Vec3d eye, Vec3d target, unsigned width, unsigned height);

@@ -30,7 +30,7 @@ void RenderThread::run() {
 
         for (unsigned x = 0; x < m_render.m_width; x++) {
             for (unsigned y = 0; y < m_render.m_height; y++) {
-                auto c = m_render.render(x, y);
+                auto c = m_render.render(m_render.m_width - x, m_render.m_height - y);
                 m_writebuffer[x + y * m_render.m_height] = 
                     static_cast<QRgb>(colorToUint32(c));
             }

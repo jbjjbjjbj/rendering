@@ -9,12 +9,6 @@
 
 const Vec3d up = Vec3d(0, 1, 0);
 
-void Color::clamp() {
-    if (m_x > 1) { m_x = 1; }
-    if (m_y > 1) { m_y = 1; }
-    if (m_z > 1) { m_z = 1; }
-}
-
 Renderer::Renderer(const Scene &scn, Vec3d eye, Vec3d target, unsigned width, unsigned height) : 
     m_scn(scn)
 {
@@ -84,8 +78,7 @@ Color Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
         return Color(0, 0, 0);
     }
 
-    auto green = Color(0, 1, 0);
-    return Color(green * norm.dot(tolight));
+    return res->m_mat.reflect(norm, r.m_direction, tolight);
 }
 
 const Shape* Renderer::cast_ray(const Ray &r, double chk_dist, double *dist_ret) {

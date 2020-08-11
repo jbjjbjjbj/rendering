@@ -4,12 +4,27 @@
 #include <iostream>
 #include "common.hpp"
 
-Sphere::Sphere(Vec3d center, double radius) {
+void Color::clamp() {
+    if (m_x > 1) { m_x = 1; }
+    if (m_y > 1) { m_y = 1; }
+    if (m_z > 1) { m_z = 1; }
+}
+
+Material::Material(Color color, double defuse) {
+    m_color = color;
+    m_defuse = defuse;
+}
+
+Color Material::reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out) const {
+    return Vec3d(m_color) * (out.dot(normal) * m_defuse);
+}
+
+Sphere::Sphere(const Material &mat, Vec3d center, double radius) : Shape(mat) {
     m_center = center;
     m_radius = radius;
 }
 
-Plane::Plane(Vec3d start, Vec3d norm) {
+Plane::Plane(const Material &mat, Vec3d start, Vec3d norm) : Shape(mat) {
     m_start = start;
     m_norm = norm;
 
