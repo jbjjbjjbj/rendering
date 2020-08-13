@@ -5,12 +5,13 @@
 
 #include <render.hpp>
 
-uint32_t colorToUint32(Color &c) {
-    c.clamp();
+uint32_t colorToUint32(const Color &c) {
+    Color cnew = Color(c);
+    cnew.clamp();
     return (0xFF << 24) + 
-        (c.r() << 16) +
-        (c.g() << 8) +
-        c.b();
+        (cnew.r() << 16) +
+        (cnew.g() << 8) +
+        cnew.b();
 }
 
 // Run by main thread
@@ -27,12 +28,19 @@ void RenderThread::run() {
     while (1) {
         // Wait for work
         m_work.acquire();
+        m_render.m_sampler.seed(100);
 
-        for (unsigned x = 0; x < m_render.m_width; x++) {
-            for (unsigned y = 0; y < m_render.m_height; y++) {
-                auto c = m_render.render(m_render.m_width - x, m_render.m_height - y);
-                m_writebuffer[x + y * m_render.m_height] = 
-                    static_cast<QRgb>(colorToUint32(c));
+        // Very expensive, but necesary to get live rendering
+        Color *sum = new Color[m_render.m_width * m_render.m_height];
+
+        for (unsigned sample = 1; sample < m_samples+1; sample++) {
+            for (unsigned x = 0; x < m_render.m_width; x++) {
+                for (unsigned y = 0; y < m_render.m_height; y++) {
+                    auto index = x + y * m_render.m_height;
+                    sum[index] += m_render.render(m_render.m_width - x, m_render.m_height - y, 1);
+
+                    m_writebuffer[index] = colorToUint32(sum[index] / sample);
+                }
             }
         }
 
@@ -64,7 +72,7 @@ RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Render
     QObject::connect(&m_worker, &RenderThread::done,
             this, &RenderCoordinator::workerDone);
 
-    m_worker.render(target.m_drawbuffer, 1);
+    m_worker.render(target.m_drawbuffer, 100);
 
 }
 

@@ -1,6 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <iostream>
+
 class Vec3d {
     public:
         Vec3d();
@@ -16,9 +18,14 @@ class Vec3d {
 
         // Operators
         Vec3d operator+(const Vec3d &vec) const;
+        Vec3d& operator+=(const Vec3d &vec);
         Vec3d operator-(const Vec3d &vec) const;
         Vec3d operator-() const;
         Vec3d operator*(double) const;
+        Vec3d operator*(const Vec3d &vec) const;
+        Vec3d operator/(double) const;
+
+        friend std::ostream& operator<<(std::ostream& os, const Vec3d &v);
 
         double m_x, m_y, m_z;
 };

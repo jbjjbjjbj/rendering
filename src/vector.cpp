@@ -52,6 +52,13 @@ Vec3d Vec3d::operator+(const Vec3d &vec) const {
             );
 }
 
+Vec3d& Vec3d::operator+=(const Vec3d &vec) {
+    m_x += vec.m_x;
+    m_y += vec.m_y;
+    m_z += vec.m_z;
+    return *this;
+}
+
 Vec3d Vec3d::operator-(const Vec3d &vec) const {
     return Vec3d(
             m_x - vec.m_x, 
@@ -75,4 +82,25 @@ Vec3d Vec3d::operator*(double op) const {
             m_y * op,
             m_z * op
             );
+}
+
+Vec3d Vec3d::operator*(const Vec3d &vec) const {
+    return Vec3d(
+            m_x * vec.m_x,
+            m_y * vec.m_y,
+            m_z * vec.m_z
+            );
+}
+
+Vec3d Vec3d::operator/(double op) const {
+    return Vec3d(
+            m_x / op,
+            m_y / op,
+            m_z / op
+            );
+}
+
+std::ostream& operator<<(std::ostream &out, const Vec3d &v){
+    out << "[ " << v.m_x << ", " << v.m_y << ", " << v.m_z << " ]";
+    return out;
 }

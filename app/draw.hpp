@@ -2,6 +2,7 @@
 #define DRAW_H
 
 #include <qimage.h>
+#include <qtimer.h>
 #include <qwidget.h>
 
 class DrawWidget : public QWidget {
@@ -15,9 +16,14 @@ class DrawWidget : public QWidget {
         unsigned m_width, m_height;
 
         ~DrawWidget();
+    private slots:
+        void redraw();
+
     private:
         QImage m_img;
         unsigned char i;
+
+        QTimer m_timer;
 };
 
 #endif

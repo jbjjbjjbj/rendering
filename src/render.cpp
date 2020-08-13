@@ -2,20 +2,59 @@
 #include "vector.hpp"
 #include "common.hpp"
 
+#include <cstdlib>
 #include <math.h>
 #include <iostream>
 
 #define FOV 1.74533
 
+// Uniform sampling
+#define SAMPLING_POWER 0
+
 const Vec3d up = Vec3d(0, 1, 0);
 
-Renderer::Renderer(const Scene &scn, Vec3d eye, Vec3d target, unsigned width, unsigned height) : 
+Sampler::Sampler() {
+    m_seed = 0;
+}
+
+void Sampler::seed(unsigned seed) {
+    for (unsigned i = 0; i < seed; i++) {
+        rand_r(&m_seed);
+    }
+}
+
+double Sampler::random() {
+    return (double)rand_r(&m_seed) / (double)RAND_MAX;
+}
+
+Vec3d Sampler::sample(const Vec3d &norm) {
+    /*
+    auto theta = asin(pow(1 - random(), (double)1 / (1 + SAMPLING_POWER)));
+    auto phi = 2 * M_PI * random();
+    */
+
+    auto theta = 2.0 * M_PI * random();
+    auto phi = acos(2.0 * random() - 1.0);
+
+    auto sinphi = sin(phi);
+
+    auto newvec = Vec3d(cos(theta) * sinphi, sin(theta) * sinphi, cos(phi));
+
+    if (newvec.dot(norm) <= 0) {
+        newvec = -newvec;
+    }
+
+    return newvec;
+}
+
+Renderer::Renderer(const Scene &scn, Vec3d eye, Vec3d target, unsigned width, unsigned height, unsigned maxhops) : 
     m_scn(scn)
 {
     m_eye = eye;
     m_target = target;
     m_width = width;
     m_height = height;
+    m_maxhops = maxhops;
 
     recalculate();
 }
@@ -48,12 +87,27 @@ Ray Renderer::findray(double x, double y) const {
     return Ray(m_eye, dir, true);
 }
 
-Color Renderer::render(unsigned x, unsigned y) {
+Color Renderer::render(unsigned x, unsigned y, unsigned samples) {
     auto r = findray(x, y);
-    return pathtrace_sample(r, 0);
+
+    Color sum(0, 0, 0);
+
+    for (unsigned i = 0; i < samples; i++) {
+        sum += pathtrace_sample(r, 0);
+    }
+
+    if (samples < 2) {
+        return sum;
+    } else {
+        return Vec3d(sum) / (double)samples;
+    }
 }
 
 Color Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
+    if (hop >= m_maxhops) {
+        return Color(0, 0, 0);
+    }
+
     double dist;
     auto res = cast_ray(r, 0, &dist);
 
@@ -61,24 +115,20 @@ Color Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
         return Color(0, 0, 0);
     }
 
-    // Calculate endpoint
-    auto end = r.m_start + r.m_direction * dist;
+    auto col = res->m_mat.emits();
+    if (res->m_mat.reflects()) {
+        // Calculate endpoint
+        auto end = r.m_start + r.m_direction * dist;
+        auto norm = res->norm_at(end, r.m_direction);
 
-    auto norm = res->norm_at(end, r.m_direction);
+        auto randdir = m_sampler.sample(norm);
+        auto newray = Ray(end, randdir, true);
+        auto incol = pathtrace_sample(newray, hop+1);
 
-    // Simulate single light
-    auto l = Vec3d(0, 7, 0);
-
-    auto tolight = l - end;
-    auto distance = tolight.length();
-    tolight.normalize();
-    auto lightray = Ray(end, tolight, false);
-
-    if (cast_ray(lightray, distance, nullptr)) {
-        return Color(0, 0, 0);
+        col += res->m_mat.reflect(norm, r.m_direction, newray.m_direction, incol);
     }
 
-    return res->m_mat.reflect(norm, r.m_direction, tolight);
+    return col;
 }
 
 const Shape* Renderer::cast_ray(const Ray &r, double chk_dist, double *dist_ret) {

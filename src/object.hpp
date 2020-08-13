@@ -15,19 +15,30 @@ class Color : public Vec3d {
         uint8_t g() { return m_y * 255; }
         uint8_t b() { return m_z * 255; }
 
+        Color& operator+=(const Color& op) {
+            Vec3d::operator+=(op);
+            return *this;
+        }
         void clamp();
-
 };
 
 // Implements phong BRDF 
 class Material {
     public:
-        Material(Color color, double defuse);
+        Material(Color color, double defuse, double emissive=0);
 
-        Color reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out) const;
+        Color reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Color &incol) const;
+
+        Color emits() const {
+            return m_color * m_emissive;
+        }
+
+        // Whether the material is reflective
+        bool reflects() const { return m_defuse > 0; }
     private:
         Color m_color;
         double m_defuse;
+        double m_emissive;
 };
 
 class Shape {
