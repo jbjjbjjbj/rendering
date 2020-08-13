@@ -1,5 +1,9 @@
 # Pathtracing
 
+## Preview
+
+![render](https://git.jtle.dk/pathtrace/plain/generated.png?h=rendered)
+
 ## Build requirements
 
 - Catch2
