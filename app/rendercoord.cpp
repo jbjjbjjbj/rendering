@@ -4,6 +4,7 @@
 #include <qrgb.h>
 
 #include <render.hpp>
+#include <sstream>
 
 uint32_t colorToUint32(const Color &c) {
     Color cnew = Color(c);
@@ -28,10 +29,11 @@ void RenderThread::run() {
     while (1) {
         // Wait for work
         m_work.acquire();
-        m_render.m_sampler.seed(100);
 
         // Very expensive, but necesary to get live rendering
         Color *sum = new Color[m_render.m_width * m_render.m_height];
+
+        m_current_samples = 0;
 
         for (unsigned sample = 1; sample < m_samples+1; sample++) {
             for (unsigned x = 0; x < m_render.m_width; x++) {
@@ -42,6 +44,8 @@ void RenderThread::run() {
                     m_writebuffer[index] = colorToUint32(sum[index] / sample);
                 }
             }
+
+            m_current_samples = sample;
         }
 
         // Signal done
@@ -58,15 +62,25 @@ int RenderThread::render(QRgb *buffer, unsigned samples) {
     m_writebuffer = buffer;
     m_samples = samples;
     m_work.release();
+
     return 0;
 }
 
-RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r) 
+// Running on main thread
+unsigned RenderThread::current_samples() {
+    // No sync should not be a problem here.
+    return m_current_samples;
+}
+
+RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r, QLabel *status) 
     : QObject(parent),
     m_target(target),
     m_renderer(r),
-    m_worker(m_renderer, this)
+    m_worker(m_renderer, this),
+    m_timer(this)
 {
+    m_status = status;
+
     m_worker.start();
 
     QObject::connect(&m_worker, &RenderThread::done,
@@ -74,10 +88,31 @@ RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Render
 
     m_worker.render(target.m_drawbuffer, 100);
 
+    m_state = running;
+    updateUi();
+
+    QObject::connect(&m_timer, &QTimer::timeout, this, &RenderCoordinator::updateUi);
+
+    m_timer.start(500);
+
 }
 
 void RenderCoordinator::workerDone(unsigned workerid) {
-    std::cout << workerid << " done!" << std::endl;
-    m_target.repaint();
+    m_state = stopped;
+    m_timer.stop();
+    updateUi();
 }
 
+
+void RenderCoordinator::updateUi() {
+    m_target.repaint();
+
+    if (!m_status) {
+        return;
+    }
+
+    std::ostringstream status;
+    status << states[m_state] << " " << m_worker.current_samples() << " samples";
+
+    m_status->setText(QString::fromStdString(status.str()));
+}

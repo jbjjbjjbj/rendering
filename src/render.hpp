@@ -5,18 +5,25 @@
 #include "ray.hpp"
 #include "scene.hpp"
 
+class Random {
+    public:
+        void seed(unsigned seed);
+        double operator()();
+
+    private:
+        unsigned m_seed;
+};
+
 // Samples a random direction in a hemisphere, cosine weighed
 // https://blog.thomaspoulet.fr/uniform-sampling-on-unit-hemisphere/
 class Sampler {
     public:
-        Sampler();
-        void seed(unsigned seed);
+        Sampler(Random &src);
 
         Vec3d sample(const Vec3d &norm);
 
     private:
-        double random();
-        unsigned m_seed;
+        Random &m_src;
 };
 
 class Renderer {
@@ -39,6 +46,8 @@ class Renderer {
     const Shape* cast_ray(const Ray &r, double chk_dist, double *dist);
 
     const Scene &m_scn;
+
+    Random m_random;
 
     // User options
     Vec3d m_eye, m_target;

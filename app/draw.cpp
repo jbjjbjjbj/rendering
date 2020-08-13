@@ -7,16 +7,12 @@
 #include <qwindowdefs.h>
 #include <iostream>
 
-DrawWidget::DrawWidget(unsigned width, unsigned height) : QWidget(), m_timer(this) {
+DrawWidget::DrawWidget(unsigned width, unsigned height) : QWidget() {
     m_width = width;
     m_height = height;
     m_drawbuffer = new QRgb[width * height];
 
     m_img = QImage((uchar*)m_drawbuffer, width, height, QImage::Format_ARGB32);
-
-    QObject::connect(&m_timer, &QTimer::timeout, this, &DrawWidget::redraw);
-
-    m_timer.start(500);
 }
 
 void DrawWidget::paintEvent(QPaintEvent*) {

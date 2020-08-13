@@ -13,19 +13,17 @@
 
 const Vec3d up = Vec3d(0, 1, 0);
 
-Sampler::Sampler() {
-    m_seed = 0;
-}
-
-void Sampler::seed(unsigned seed) {
+void Random::seed(unsigned seed) {
     for (unsigned i = 0; i < seed; i++) {
         rand_r(&m_seed);
     }
 }
 
-double Sampler::random() {
+double Random::operator()() {
     return (double)rand_r(&m_seed) / (double)RAND_MAX;
 }
+
+Sampler::Sampler(Random &src) : m_src(src) { }
 
 Vec3d Sampler::sample(const Vec3d &norm) {
     /*
@@ -33,8 +31,8 @@ Vec3d Sampler::sample(const Vec3d &norm) {
     auto phi = 2 * M_PI * random();
     */
 
-    auto theta = 2.0 * M_PI * random();
-    auto phi = acos(2.0 * random() - 1.0);
+    auto theta = 2.0 * M_PI * m_src();
+    auto phi = acos(2.0 * m_src() - 1.0);
 
     auto sinphi = sin(phi);
 
@@ -48,6 +46,7 @@ Vec3d Sampler::sample(const Vec3d &norm) {
 }
 
 Renderer::Renderer(const Scene &scn, Vec3d eye, Vec3d target, unsigned width, unsigned height, unsigned maxhops) : 
+    m_sampler(m_random),
     m_scn(scn)
 {
     m_eye = eye;
@@ -88,11 +87,11 @@ Ray Renderer::findray(double x, double y) const {
 }
 
 Color Renderer::render(unsigned x, unsigned y, unsigned samples) {
-    auto r = findray(x, y);
 
     Color sum(0, 0, 0);
 
     for (unsigned i = 0; i < samples; i++) {
+        auto r = findray(x + m_random(), y + m_random());
         sum += pathtrace_sample(r, 0);
     }
 

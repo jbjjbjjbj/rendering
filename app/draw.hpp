@@ -13,6 +13,7 @@ class DrawWidget : public QWidget {
         void paintEvent(QPaintEvent*);
 
         QRgb *m_drawbuffer;
+        QImage m_img;
         unsigned m_width, m_height;
 
         ~DrawWidget();
@@ -20,10 +21,7 @@ class DrawWidget : public QWidget {
         void redraw();
 
     private:
-        QImage m_img;
         unsigned char i;
-
-        QTimer m_timer;
 };
 
 #endif
