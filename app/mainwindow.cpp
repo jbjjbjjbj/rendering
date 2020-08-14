@@ -18,8 +18,15 @@ MainWindow::MainWindow(Renderer r)
     saveAct->setStatusTip(tr("Save the rendered image"));
     connect(saveAct, &QAction::triggered, this, &MainWindow::saveimage);
 
+    auto stopAct = new QAction(tr("&Stop"), this);
+    stopAct->setStatusTip(tr("Stop and sync threads"));
+    QObject::connect(stopAct, &QAction::triggered, &m_render, &RenderCoordinator::stop);
+
     fileMenu = menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(saveAct);
+
+    fileMenu = menuBar()->addMenu(tr("&Render"));
+    fileMenu->addAction(stopAct);
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(tr("About Qt"), qApp, &QApplication::aboutQt);

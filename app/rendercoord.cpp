@@ -1,8 +1,10 @@
 #include "rendercoord.hpp"
+#include <algorithm>
 #include <qobject.h>
 #include <iostream>
 #include <qrgb.h>
 
+#include <qsemaphore.h>
 #include <render.hpp>
 #include <sstream>
 
@@ -16,12 +18,14 @@ uint32_t colorToUint32(const Color &c) {
 }
 
 // Run by main thread
-RenderThread::RenderThread(Renderer r, QObject *parent, unsigned id) 
+RenderThread::RenderThread(Renderer r, unsigned threads, QObject *parent, unsigned id) 
     : QThread(parent),
     m_lock(1),
-    m_render(r)
+    m_render(r),
+    m_pause(1)
 {
     m_id = id;
+    m_workers = threads;
 }
 
 // Run on new thread
@@ -35,23 +39,35 @@ void RenderThread::run() {
 
         m_current_samples = 0;
 
-        for (unsigned sample = 1; sample < m_samples+1; sample++) {
-            for (unsigned x = 0; x < m_render.m_width; x++) {
-                for (unsigned y = 0; y < m_render.m_height; y++) {
-                    auto index = x + y * m_render.m_height;
+        for (int sample = 0; sample < m_samples; sample++) {
+            m_current_samples = sample;
+            // Probably not that smart
+            m_pause.acquire();
+            m_pause.release();
+
+            for (unsigned y = m_id; y < m_render.m_height; y += m_workers) {
+                for (unsigned x = 0; x < m_render.m_width; x++) {
+                    auto index = x + y * m_render.m_width;
                     sum[index] += m_render.render(m_render.m_width - x, m_render.m_height - y, 1);
 
-                    m_writebuffer[index] = colorToUint32(sum[index] / sample);
+                    m_writebuffer[index] = colorToUint32(sum[index] / (sample+1));
                 }
             }
 
-            m_current_samples = sample;
         }
 
         // Signal done
         m_lock.release();
         emit done(m_id);
     }
+}
+
+void RenderThread::pause() {
+    m_pause.acquire();
+}
+
+void RenderThread::resume() {
+    m_pause.release();
 }
 
 int RenderThread::render(QRgb *buffer, unsigned samples) {
@@ -66,6 +82,15 @@ int RenderThread::render(QRgb *buffer, unsigned samples) {
     return 0;
 }
 
+unsigned RenderThread::stop() {
+    stopAt(m_current_samples);
+    return m_current_samples;
+}
+
+void RenderThread::stopAt(int at) {
+    m_samples = at;
+}
+
 // Running on main thread
 unsigned RenderThread::current_samples() {
     // No sync should not be a problem here.
@@ -76,17 +101,30 @@ RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Render
     : QObject(parent),
     m_target(target),
     m_renderer(r),
-    m_worker(m_renderer, this),
     m_timer(this)
 {
     m_status = status;
 
-    m_worker.start();
+    // Create and start workers
+    for (int i = 0; i < 4; i++) {
+        auto thread = new RenderThread(m_renderer, 4, this, i);
 
-    QObject::connect(&m_worker, &RenderThread::done,
-            this, &RenderCoordinator::workerDone);
+        thread->start();
+        QObject::connect(thread, &RenderThread::done, this, &RenderCoordinator::workerDone);
 
-    m_worker.render(target.m_drawbuffer, 100);
+        m_workers.push_back(thread);
+    }
+
+    render();
+
+}
+
+void RenderCoordinator::render() {
+    m_started = 0;
+    for (auto thd : m_workers) {
+        thd->render(m_target.m_drawbuffer, 20);
+        m_started++;
+    }
 
     m_state = running;
     updateUi();
@@ -94,13 +132,64 @@ RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Render
     QObject::connect(&m_timer, &QTimer::timeout, this, &RenderCoordinator::updateUi);
 
     m_timer.start(500);
+}
 
+void RenderCoordinator::stop() {
+    unsigned max = 0;
+    for (auto thd : m_workers) {
+        thd->pause();
+
+        auto val = thd->current_samples();
+        if (val>max) {
+            max = val;
+        }
+    }
+
+    std::cout << max << std::endl;
+
+    for (auto thd : m_workers) {
+        thd->stopAt(max+1);
+        thd->resume();
+    }
+
+    m_state = stopping;
+    updateUi();
 }
 
 void RenderCoordinator::workerDone(unsigned workerid) {
+    std::cout << "Worker " << workerid << " done!" << std::endl;
+    if (--m_started) {
+        return;
+    }
+    std::cout << "All done :-)" << std::endl;
+
+    // All workers are done
     m_state = stopped;
     m_timer.stop();
     updateUi();
+}
+
+unsigned RenderCoordinator::calcStats(unsigned *max, unsigned *min, double *avg) {
+    unsigned count = 0;
+    unsigned sum = 0;
+    for (auto thd : m_workers) {
+        auto val = thd->current_samples();
+        if (min && (val < *min || !count)) {
+            *min = val;
+        }
+        if (max && (val > *max || !count)) {
+            *max = val;
+        }
+
+        sum += val;
+        count++;
+    }
+
+    if (avg) {
+        *avg = (double)sum / count;
+    }
+
+    return count;
 }
 
 
@@ -111,8 +200,18 @@ void RenderCoordinator::updateUi() {
         return;
     }
 
+    // Gather statictics from workers
+    unsigned max;
+    unsigned min;
+    double avg;
+    unsigned count = calcStats(&max, &min, &avg);
+
     std::ostringstream status;
-    status << states[m_state] << " " << m_worker.current_samples() << " samples";
+    status << states[m_state] << 
+        " Threads: " << count <<
+        " Max: " << max << " samples" <<
+        " Min: " << min << " samples" <<
+        " Avg: " << avg << " samples";
 
     m_status->setText(QString::fromStdString(status.str()));
 }
