@@ -7,12 +7,11 @@
 #include <qwindowdefs.h>
 #include <iostream>
 
-DrawWidget::DrawWidget(unsigned width, unsigned height) : QWidget() {
-    m_width = width;
-    m_height = height;
-    m_drawbuffer = new QRgb[width * height];
+DrawWidget::DrawWidget(const Config &conf) : 
+    QWidget(), m_conf(conf) {
+    m_drawbuffer = new QRgb[conf.m_width * conf.m_height];
 
-    m_img = QImage((uchar*)m_drawbuffer, width, height, QImage::Format_ARGB32);
+    m_img = QImage((uchar*)m_drawbuffer, conf.m_width, conf.m_height, QImage::Format_ARGB32);
 }
 
 void DrawWidget::paintEvent(QPaintEvent*) {

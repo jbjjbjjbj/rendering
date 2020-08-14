@@ -2,6 +2,7 @@
 #define RENDER_THREAD_H
 
 #include "draw.hpp"
+#include "config.hpp"
 #include <atomic>
 #include <qlabel.h>
 #include <render.hpp>
@@ -17,7 +18,7 @@ class RenderThread : public QThread {
     Q_OBJECT
 
     public:
-        RenderThread(Renderer r, unsigned threads, QObject *parent = nullptr, unsigned id = 0);
+        RenderThread(Renderer r, unsigned threads, const Config &cfg, QObject *parent = nullptr, unsigned id = 0);
 
         // Returns 0 if successful or 1 if busy
         int render(QRgb *buffer, unsigned samples);
@@ -46,6 +47,8 @@ class RenderThread : public QThread {
 
         unsigned m_workers;
 
+        Config const m_conf;
+
         // Value in here means work is to be done
         QSemaphore m_work;
         QSemaphore m_pause;
@@ -59,7 +62,7 @@ class RenderCoordinator : public QObject {
     Q_OBJECT
 
     public:
-        RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r, QLabel *status=nullptr);
+        RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r, const Config &conf, QLabel *status=nullptr);
         void setSamples(unsigned samples);
         void render();
 
@@ -84,7 +87,7 @@ class RenderCoordinator : public QObject {
 
         State m_state;
 
-        unsigned m_samples;
+        const Config &m_conf;
 };
 
 #endif

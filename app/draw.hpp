@@ -1,6 +1,7 @@
 #ifndef DRAW_H
 #define DRAW_H
 
+#include "config.hpp"
 #include <qimage.h>
 #include <qtimer.h>
 #include <qwidget.h>
@@ -9,7 +10,7 @@ class DrawWidget : public QWidget {
     Q_OBJECT
 
     public:
-        DrawWidget(unsigned width, unsigned height);
+        DrawWidget(const Config &conf);
         void paintEvent(QPaintEvent*);
 
         QRgb *m_drawbuffer;
@@ -22,6 +23,8 @@ class DrawWidget : public QWidget {
 
     private:
         unsigned char i;
+
+        const Config &m_conf;
 };
 
 #endif

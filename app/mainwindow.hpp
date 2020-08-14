@@ -6,6 +6,7 @@
 #include <QMenuBar>
 #include <QStatusBar>
 
+#include "config.hpp"
 #include "draw.hpp"
 #include "rendercoord.hpp"
 #include <qmainwindow.h>
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
     public:
-        MainWindow(Renderer r);
+        MainWindow(Renderer r, const Config &conf);
 
     private slots:
         void saveimage();
@@ -26,6 +27,8 @@ class MainWindow : public QMainWindow {
 
         QMenu *fileMenu;
         QMenu *helpMenu;
+
+        const Config &m_conf;
 };
 
 #endif

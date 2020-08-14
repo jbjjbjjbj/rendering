@@ -6,10 +6,11 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-MainWindow::MainWindow(Renderer r)
-    : m_drawer(500, 500),
+MainWindow::MainWindow(Renderer r, const Config &conf)
+    : m_drawer(conf),
     runstatus("Not running", this),
-    m_render(this, m_drawer, r, &runstatus)
+    m_render(this, m_drawer, r, conf, &runstatus),
+    m_conf(conf)
 {
 
     setCentralWidget(&m_drawer);

@@ -18,10 +18,11 @@ uint32_t colorToUint32(const Color &c) {
 }
 
 // Run by main thread
-RenderThread::RenderThread(Renderer r, unsigned threads, QObject *parent, unsigned id) 
+RenderThread::RenderThread(Renderer r, unsigned threads, const Config &conf, QObject *parent, unsigned id) 
     : QThread(parent),
     m_lock(1),
     m_render(r),
+    m_conf(conf),
     m_pause(1)
 {
     m_id = id;
@@ -78,6 +79,7 @@ int RenderThread::render(QRgb *buffer, unsigned samples) {
     m_writebuffer = buffer;
     m_samples = samples;
     m_work.release();
+    std::cout << samples << std::endl;
 
     return 0;
 }
@@ -97,17 +99,18 @@ unsigned RenderThread::current_samples() {
     return m_current_samples;
 }
 
-RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r, QLabel *status) 
+RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Renderer r, const Config &conf, QLabel *status) 
     : QObject(parent),
     m_target(target),
     m_renderer(r),
-    m_timer(this)
+    m_timer(this),
+    m_conf(conf)
 {
     m_status = status;
 
     // Create and start workers
-    for (int i = 0; i < 4; i++) {
-        auto thread = new RenderThread(m_renderer, 4, this, i);
+    for (unsigned i = 0; i < conf.m_workers; i++) {
+        auto thread = new RenderThread(m_renderer, conf.m_workers, conf, this, i);
 
         thread->start();
         QObject::connect(thread, &RenderThread::done, this, &RenderCoordinator::workerDone);
@@ -122,7 +125,7 @@ RenderCoordinator::RenderCoordinator(QObject *parent, DrawWidget &target, Render
 void RenderCoordinator::render() {
     m_started = 0;
     for (auto thd : m_workers) {
-        thd->render(m_target.m_drawbuffer, 20);
+        thd->render(m_target.m_drawbuffer, m_conf.m_samples);
         m_started++;
     }
 
@@ -131,7 +134,7 @@ void RenderCoordinator::render() {
 
     QObject::connect(&m_timer, &QTimer::timeout, this, &RenderCoordinator::updateUi);
 
-    m_timer.start(500);
+    m_timer.start(1000.0 / m_conf.m_framerate);
 }
 
 void RenderCoordinator::stop() {
