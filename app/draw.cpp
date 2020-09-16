@@ -1,4 +1,5 @@
 #include "draw.hpp"
+#include <qnamespace.h>
 #include <qpainter.h>
 #include <qglobal.h>
 #include <qimage.h>
@@ -12,11 +13,14 @@ DrawWidget::DrawWidget(const Config &conf) :
     m_drawbuffer = new QRgb[conf.m_width * conf.m_height];
 
     m_img = QImage((uchar*)m_drawbuffer, conf.m_width, conf.m_height, QImage::Format_ARGB32);
+
 }
 
 void DrawWidget::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    painter.drawImage(0, 0, m_img);
+
+    auto scaled = m_img.scaled(width(), height(), Qt::KeepAspectRatio);
+    painter.drawImage(0, 0, scaled);
 }
 
 void DrawWidget::redraw() {
