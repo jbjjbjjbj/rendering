@@ -24,12 +24,13 @@ int main(int argc, char *argv[])
 
 
     Material blue(Color(0.3, 0.3, 1), 1);
+    Material green(Color(0.3, 1, 0.3), 0, 1, 50);
     Material red(Color(1, 0.3, 0.3), 1);
     Material white(Color(1, 1, 1), 1);
-    Material em(Color(1, 1, 1), 0, 2);
+    Material em(Color(1, 1, 1), 0, 0, 0, 2);
 
     scn.addShape(new Sphere(red, Vec3d(2, 6, -1), 1));
-    scn.addShape(new Sphere(white, Vec3d(0, 4, -1), 1.3));
+    scn.addShape(new Sphere(green, Vec3d(0, 4, -1), 1.3));
     scn.addShape(new Sphere(white, Vec3d(-2, 5, -2), 1.3));
     scn.addShape(new Sphere(blue, Vec3d(0, 7, 0), 0.5));
 

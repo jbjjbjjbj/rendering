@@ -124,7 +124,7 @@ Color Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
         auto newray = Ray(end, randdir, true);
         auto incol = pathtrace_sample(newray, hop+1);
 
-        col += res->m_mat.reflect(norm, r.m_direction, newray.m_direction, incol);
+        col += res->m_mat.reflect(norm, newray.m_direction, r.m_direction, incol);
     }
 
     return col;

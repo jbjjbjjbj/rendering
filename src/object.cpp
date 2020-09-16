@@ -10,15 +10,28 @@ void Color::clamp() {
     if (m_z > 1) { m_z = 1; }
 }
 
-Material::Material(Color color, double defuse, double emissive) {
+Material::Material(Color color, double defuse, double spectral, double spectral_pow, double emissive) {
     m_color = color;
     m_defuse = defuse;
     m_emissive = emissive;
+    m_spectral = spectral;
+    m_spectral_pow = spectral_pow;
 }
 
 Color Material::reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Color &incol) const {
-    return Vec3d(m_color) * m_emissive + 
-         (Vec3d(m_color) * Vec3d(incol)) * (out.dot(normal) * m_defuse);
+    // Emissive
+    Color c = Vec3d(m_color) * m_emissive;
+
+    // Defuse
+    c += (Vec3d(m_color) * Vec3d(incol)) * (in.dot(normal) * m_defuse);
+
+    // Spectral
+    if (m_spectral > 0) {
+        auto R = normal * (2 * normal.dot(in)) - in;
+        c += Vec3d(incol) * pow(out.dot(R) * m_spectral, m_spectral_pow);
+    }
+
+    return c;
 }
 
 Sphere::Sphere(const Material &mat, Vec3d center, double radius) : Shape(mat) {

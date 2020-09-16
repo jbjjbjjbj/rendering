@@ -25,7 +25,7 @@ class Color : public Vec3d {
 // Implements phong BRDF 
 class Material {
     public:
-        Material(Color color, double defuse, double emissive=0);
+        Material(Color color, double defuse, double spectral=0, double spectral_pow=0, double emissive=0);
 
         Color reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Color &incol) const;
 
@@ -34,11 +34,13 @@ class Material {
         }
 
         // Whether the material is reflective
-        bool reflects() const { return m_defuse > 0; }
+        bool reflects() const { return m_defuse+m_spectral > 0; }
     private:
         Color m_color;
         double m_defuse;
         double m_emissive;
+        double m_spectral;
+        double m_spectral_pow;
 };
 
 class Shape {
