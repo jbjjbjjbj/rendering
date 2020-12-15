@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
     conf.m_width = 500;
     conf.m_height = 500;
     conf.m_maxhops = 5;
-    conf.m_samples = 100;
+    conf.m_samples = 1000;
     conf.m_framerate = 3;
-    conf.m_workers = 4;
+    conf.m_workers = 8;
 
 
     Material blue(Color(0.3, 0.3, 1), 1);
