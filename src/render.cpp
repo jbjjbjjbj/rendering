@@ -1,6 +1,6 @@
 #include "render.hpp"
-#include "vector.hpp"
-#include "common.hpp"
+#include "core/vector.hpp"
+#include "core/common.hpp"
 
 #include <cstdlib>
 #include <math.h>

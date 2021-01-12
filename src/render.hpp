@@ -1,8 +1,8 @@
 #ifndef RENDER_H
 #define RENDER_H
 
-#include "vector.hpp"
-#include "ray.hpp"
+#include "core/vector.hpp"
+#include "core/ray.hpp"
 #include "scene.hpp"
 
 class Random {

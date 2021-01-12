@@ -2,7 +2,7 @@
 
 #include <math.h>
 #include <iostream>
-#include "common.hpp"
+#include "core/common.hpp"
 
 void Color::clamp() {
     if (m_x > 1) { m_x = 1; }

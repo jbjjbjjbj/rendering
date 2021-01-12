@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 
 project(pathtracing)
 
@@ -15,7 +15,14 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 FILE(GLOB app_sources ${CMAKE_SOURCE_DIR}/app/*.cpp)
-FILE(GLOB sources ${CMAKE_SOURCE_DIR}/src/*.cpp)
+SET(sources
+    src/core/ray.cpp
+    src/core/vector.cpp
+    src/object.cpp
+    src/render.cpp
+    src/scene.cpp
+    )
+list(TRANSFORM sources PREPEND ${CMAKE_SOURCE_DIR}/)
 FILE(GLOB test_sources ${CMAKE_SOURCE_DIR}/test/*.cpp)
 
 add_executable(pathtracing ${sources} ${app_sources})

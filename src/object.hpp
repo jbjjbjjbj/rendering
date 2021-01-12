@@ -2,8 +2,8 @@
 #define OBJECT_H
 
 #include <memory>
-#include "vector.hpp"
-#include "ray.hpp"
+#include "core/vector.hpp"
+#include "core/ray.hpp"
 
 class Color : public Vec3d {
     public:
