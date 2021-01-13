@@ -8,13 +8,13 @@
 #include <render.hpp>
 #include <sstream>
 
-uint32_t colorToUint32(const Color &c) {
-    Color cnew = Color(c);
-    cnew.clamp();
+uint32_t colorToUint32(const Spectrum &c) {
+    Spectrum cnew = c.clamp(0, 1);
+    cnew *= 255;
     return (0xFF << 24) + 
-        (cnew.r() << 16) +
-        (cnew.g() << 8) +
-        cnew.b();
+        ((int)cnew.R() << 16) +
+        ((int)cnew.G() << 8) +
+        cnew.B();
 }
 
 // Run by main thread
@@ -36,7 +36,7 @@ void RenderThread::run() {
         m_work.acquire();
 
         // Very expensive, but necesary to get live rendering
-        Color *sum = new Color[m_render.m_width * m_render.m_height];
+        Spectrum *sum = new Spectrum[m_render.m_width * m_render.m_height];
 
         m_current_samples = 0;
 

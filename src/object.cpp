@@ -4,13 +4,7 @@
 #include <iostream>
 #include "core/common.hpp"
 
-void Color::clamp() {
-    if (m_x > 1) { m_x = 1; }
-    if (m_y > 1) { m_y = 1; }
-    if (m_z > 1) { m_z = 1; }
-}
-
-Material::Material(Color color, double defuse, double spectral, double spectral_pow, double emissive) {
+Material::Material(Spectrum color, double defuse, double spectral, double spectral_pow, double emissive) {
     m_color = color;
     m_defuse = defuse;
     m_emissive = emissive;
@@ -18,17 +12,17 @@ Material::Material(Color color, double defuse, double spectral, double spectral_
     m_spectral_pow = spectral_pow;
 }
 
-Color Material::reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Color &incol) const {
+Spectrum Material::reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Spectrum &incol) const {
     // Emissive
-    Color c = Vec3d(m_color) * m_emissive;
+    Spectrum c = m_color * m_emissive;
 
     // Defuse
-    c += (Vec3d(m_color) * Vec3d(incol)) * (in.dot(normal) * m_defuse);
+    c += (m_color * incol) * (in.dot(normal) * m_defuse);
 
     // Spectral
     if (m_spectral > 0) {
         auto R = normal * (2 * normal.dot(in)) - in;
-        c += Vec3d(incol) * pow(out.dot(R) * m_spectral, m_spectral_pow);
+        c += incol * pow(out.dot(R) * m_spectral, m_spectral_pow);
     }
 
     return c;

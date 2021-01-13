@@ -4,6 +4,7 @@
 
 #include "mainwindow.hpp"
 #include <core/vector.hpp>
+#include <core/spectrum.hpp>
 #include <scene.hpp>
 #include <render.hpp>
 #include <object.hpp>
@@ -23,11 +24,11 @@ int main(int argc, char *argv[])
     conf.m_workers = 4;
 
 
-    Material blue(Color(0.3, 0.3, 1), 1);
-    Material green(Color(0.3, 1, 0.3), 0, 1, 50);
-    Material red(Color(1, 0.3, 0.3), 1);
-    Material white(Color(1, 1, 1), 1);
-    Material em(Color(1, 1, 1), 0, 0, 0, 2);
+    Material blue(Spectrum::FromRGB(0.3, 0.3, 1), 1);
+    Material green(Spectrum::FromRGB(0.3, 1, 0.3), 0, 1, 50);
+    Material red(Spectrum::FromRGB(1, 0.3, 0.3), 1);
+    Material white(Spectrum::FromRGB(1, 1, 1), 1);
+    Material em(Spectrum::FromRGB(1, 1, 1), 0, 0, 0, 2);
 
     scn.addShape(new Sphere(red, Vec3d(2, 6, -1), 1));
     scn.addShape(new Sphere(green, Vec3d(0, 4, -1), 1.3));

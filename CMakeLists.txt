@@ -18,6 +18,7 @@ FILE(GLOB app_sources ${CMAKE_SOURCE_DIR}/app/*.cpp)
 SET(sources
     src/core/ray.cpp
     src/core/vector.cpp
+    src/core/spectrum.cpp
     src/object.cpp
     src/render.cpp
     src/scene.cpp

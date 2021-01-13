@@ -86,9 +86,9 @@ Ray Renderer::findray(double x, double y) const {
     return Ray(m_eye, dir, true);
 }
 
-Color Renderer::render(unsigned x, unsigned y, unsigned samples) {
+Spectrum Renderer::render(unsigned x, unsigned y, unsigned samples) {
 
-    Color sum(0, 0, 0);
+    Spectrum sum;
 
     for (unsigned i = 0; i < samples; i++) {
         auto r = findray(x + m_random(), y + m_random());
@@ -98,20 +98,20 @@ Color Renderer::render(unsigned x, unsigned y, unsigned samples) {
     if (samples < 2) {
         return sum;
     } else {
-        return Vec3d(sum) / (double)samples;
+        return sum / (double)samples;
     }
 }
 
-Color Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
+Spectrum Renderer::pathtrace_sample(const Ray &r, unsigned hop) {
     if (hop >= m_maxhops) {
-        return Color(0, 0, 0);
+        return Spectrum();
     }
 
     double dist;
     auto res = cast_ray(r, 0, &dist);
 
     if (!res) {
-        return Color(0, 0, 0);
+        return Spectrum();
     }
 
     auto col = res->m_mat.emits();

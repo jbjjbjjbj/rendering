@@ -4,39 +4,23 @@
 #include <memory>
 #include "core/vector.hpp"
 #include "core/ray.hpp"
-
-class Color : public Vec3d {
-    public:
-        Color() {}
-        Color(const Vec3d &v) : Vec3d(v) {}
-        Color(double r, double g, double b) : Vec3d(r, g, b) {}
-
-        uint8_t r() { return m_x * 255; }
-        uint8_t g() { return m_y * 255; }
-        uint8_t b() { return m_z * 255; }
-
-        Color& operator+=(const Color& op) {
-            Vec3d::operator+=(op);
-            return *this;
-        }
-        void clamp();
-};
+#include "core/spectrum.hpp"
 
 // Implements phong BRDF 
 class Material {
     public:
-        Material(Color color, double defuse, double spectral=0, double spectral_pow=0, double emissive=0);
+        Material(Spectrum color, double defuse, double spectral=0, double spectral_pow=0, double emissive=0);
 
-        Color reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Color &incol) const;
+        Spectrum reflect(const Vec3d &normal, const Vec3d &in, const Vec3d &out, const Spectrum &incol) const;
 
-        Color emits() const {
+        Spectrum emits() const {
             return m_color * m_emissive;
         }
 
         // Whether the material is reflective
         bool reflects() const { return m_defuse+m_spectral > 0; }
     private:
-        Color m_color;
+        Spectrum m_color;
         double m_defuse;
         double m_emissive;
         double m_spectral;
