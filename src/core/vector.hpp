@@ -2,11 +2,28 @@
 #define VECTOR_H
 
 #include <iostream>
+#include <math.h>
+
+class Vec2d {
+    public:
+        Vec2d();
+        Vec2d(double x, double y);
+
+        void set(double x, double y);
+
+        double m_x, m_y, m_z;
+};
 
 class Vec3d {
     public:
         Vec3d();
         Vec3d(double x, double y, double z);
+
+        static inline Vec3d FromSpherical(double sinTheta, double cosTheta, double phi) {
+            return Vec3d(sinTheta * std::cos(phi),
+                    sinTheta * std::sin(phi),
+                    cosTheta);
+        }
 
         void set(double x, double y, double z);
         void normalize();

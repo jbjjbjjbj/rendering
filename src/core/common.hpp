@@ -5,6 +5,6 @@
 
 #define ZERO_APPROX 1e-6
 
-#define INFINITY std::numeric_limits<double>::infinity()
+#define INFTY std::numeric_limits<double>::infinity()
 
 #endif

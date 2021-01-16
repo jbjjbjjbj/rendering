@@ -1,7 +1,21 @@
 #include "vector.hpp"
 
+#include <cmath>
 #include <math.h>
 #include <stdexcept>
+
+Vec2d::Vec2d() {
+    set(0, 0);
+}
+
+Vec2d::Vec2d(double x, double y) {
+    set(x, y);
+}
+
+void Vec2d::set(double x, double y) {
+    m_x = x;
+    m_y = y;
+}
 
 Vec3d::Vec3d() {
     set(0, 0, 0);

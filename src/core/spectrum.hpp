@@ -16,7 +16,7 @@ public:
     Spectrum operator*(const Spectrum &o) const;
     Spectrum operator/(const Spectrum &o) const;
 
-    Spectrum clamp(double low = 0, double high = INFINITY) const;
+    Spectrum clamp(double low = 0, double high = INFTY) const;
 
     double R() const { return c[0]; }
     double G() const { return c[1]; }

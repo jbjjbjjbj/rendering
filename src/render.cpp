@@ -34,9 +34,7 @@ Vec3d Sampler::sample(const Vec3d &norm) {
     auto theta = 2.0 * M_PI * m_src();
     auto phi = acos(2.0 * m_src() - 1.0);
 
-    auto sinphi = sin(phi);
-
-    auto newvec = Vec3d(cos(theta) * sinphi, sin(theta) * sinphi, cos(phi));
+    auto newvec = Vec3d::FromSpherical(sin(theta), cos(theta), phi);
 
     if (newvec.dot(norm) <= 0) {
         newvec = -newvec;
