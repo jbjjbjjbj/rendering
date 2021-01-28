@@ -24,18 +24,25 @@ fn max<T: Number> (a: T, b: T) -> T {
 }
 
 impl<T: Number> Bound2<T> {
-    fn new(p0: &Vector2<T>, p1: &Vector2<T>) -> Bound2<T> {
-        let min = Vector2::from_xy(min(p0.x, p1.x), min(p0.y, p1.y));
-        let max = Vector2::from_xy(max(p0.x, p1.x), max(p0.y, p1.y));
+    pub fn new(p0: &Vector2<T>, p1: &Vector2<T>) -> Self {
+        let min = Vector2::new_xy(min(p0.x, p1.x), min(p0.y, p1.y));
+        let max = Vector2::new_xy(max(p0.x, p1.x), max(p0.y, p1.y));
 
-        Bound2 { min, max }
+        Self { min, max }
     }
 
-    fn diagonal(&self) -> Vector2<T> {
+    pub fn new_xyxy(x1: T, y1: T, x2: T, y2: T) -> Self {
+        Self::new(
+            &Vector2::new_xy(x1, y1),
+            &Vector2::new_xy(x2, y2),
+            )
+    }
+
+    pub fn diagonal(&self) -> Vector2<T> {
         self.max - self.min
     }
 
-    fn area(&self) -> T {
+    pub fn area(&self) -> T {
         let diag = self.diagonal();
         return diag.x * diag.y;
     }
@@ -61,8 +68,8 @@ impl From<&Bound2f> for Bound2i {
 
 pub fn intersect<T: Number>(a: &Bound2<T>, b: &Bound2<T>) -> Bound2<T> {
     Bound2::new(
-        &Vector2::from_xy(max(a.min.x, b.min.x), max(a.min.y, b.min.y)),
-        &Vector2::from_xy(min(a.max.x, b.max.x), min(a.max.y, b.max.y)),
+        &Vector2::new_xy(max(a.min.x, b.min.x), max(a.min.y, b.min.y)),
+        &Vector2::new_xy(min(a.max.x, b.max.x), min(a.max.y, b.max.y)),
         )
 }
 
@@ -72,8 +79,8 @@ mod tests {
 
     fn create_test() -> Bound2<i32> {
         Bound2::new(
-            &Vector2::from_xy(1, 2),
-            &Vector2::from_xy(10, 3)
+            &Vector2::new_xy(1, 2),
+            &Vector2::new_xy(10, 3)
             )
     }
 
@@ -82,5 +89,20 @@ mod tests {
         let b = create_test();
 
         assert!(b.area() == 9);
+    }
+
+    #[test]
+    fn intersect_test() {
+        let b1 = Bound2i::new_xyxy(10, 10, 20, 20);
+        let b2 = Bound2i::new_xyxy(2, 11, 22, 17);
+
+        let b = intersect(&b1, &b2);
+
+        assert!(
+            b.min.x == 10 &&
+            b.min.y == 11 &&
+            b.max.x == 20 &&
+            b.max.y == 17
+            )
     }
 }

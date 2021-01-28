@@ -1,5 +1,5 @@
 use crate::{Float, Number};
-use std::ops::{Sub};
+use std::ops::{Sub, Add};
 
 #[derive(Clone, Copy)]
 pub struct Vector2<T: Number> {
@@ -15,7 +15,7 @@ impl<T: Number> Vector2<T> {
         Vector2 { x: initial, y: initial }
     }
 
-    pub fn from_xy(x: T, y: T) -> Vector2<T> {
+    pub fn new_xy(x: T, y: T) -> Vector2<T> {
         Vector2 { x, y }
     }
 }
@@ -23,10 +23,36 @@ impl<T: Number> Vector2<T> {
 impl<T: Number> Sub for Vector2<T> {
     type Output = Self;
     fn sub(self, op: Self) -> Self::Output {
-        Vector2 {
-            x: self.x - op.x,
-            y: self.y - op.y,
-        }
+        Self::new_xy(
+            self.x - op.x,
+            self.y - op.y,
+        )
+    }
+}
+
+impl<T: Number> Add for Vector2<T> {
+    type Output = Self;
+    fn add(self, op: Self) -> Self::Output {
+        Self::new_xy(
+            self.x + op.x,
+            self.y + op.y,
+        )
+    }
+}
+
+impl Vector2f {
+    pub fn ceil(&self) -> Self {
+        Self::new_xy(
+            self.x.ceil(),
+            self.y.ceil()
+            )
+    }
+
+    pub fn floor(&self) -> Self {
+        Self::new_xy(
+            self.x.ceil(),
+            self.y.ceil()
+            )
     }
 }
 
@@ -55,7 +81,7 @@ mod tests {
 
     #[test]
     fn new_vec2() {
-        let v = Vector2::from_xy(2.0, 10.0);
+        let v = Vector2::new_xy(2.0, 10.0);
 
         assert!(v.x == 2.0 && v.y == 10.0);
 
@@ -66,10 +92,19 @@ mod tests {
 
     #[test]
     fn sub_vec2() {
-        let v1 = Vector2::from_xy(10, 11);
-        let v2 = Vector2::from_xy(2, 3);
+        let v1 = Vector2::new_xy(10, 11);
+        let v2 = Vector2::new_xy(2, 3);
 
         let v3 = v1-v2;
         assert!(v3.x == 8 && v3.y == 8);
+    }
+
+    #[test]
+    fn add_vec2() {
+        let v1 = Vector2::new_xy(10, 11);
+        let v2 = Vector2::new_xy(2, 3);
+
+        let v3 = v1+v2;
+        assert!(v3.x == 12 && v3.y == 14);
     }
 }

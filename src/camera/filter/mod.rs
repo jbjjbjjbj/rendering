@@ -26,7 +26,7 @@ impl Eval for Filter {
 }
 
 impl Filter {
-    fn new_box(radius: &Vector2f) -> Filter {
-        Filter { radius: radius.clone(), eval: Box::new(BoxFilter {}) }
+    pub fn new_box(radius: Vector2f) -> Filter {
+        Filter { radius: radius, eval: Box::new(BoxFilter {}) }
     }
 }

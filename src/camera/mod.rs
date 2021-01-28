@@ -1,2 +1,2 @@
-mod film;
-mod filter;
+pub mod film;
+pub mod filter;

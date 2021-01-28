@@ -1,15 +1,16 @@
-mod vector;
-mod bound;
-mod camera;
+pub mod vector;
+pub mod bound;
+pub mod camera;
 mod spectrum;
 
-use std::ops::{Sub, Mul};
+use std::ops::{Add, Sub, Mul};
 use std::cmp;
 
 pub trait Number:
     Copy +
     cmp::PartialOrd +
     Sub<Output = Self> +
+    Add<Output = Self> +
     Mul<Output = Self>
 {}
 
