@@ -1,22 +1,32 @@
 use crate::vector::Vector2f;
 use crate::Float;
 
-pub trait Filter {
+trait Eval {
     fn eval(&self, point: &Vector2f) -> Float;
-    fn radius(&self) -> Vector2f;
 }
 
-pub struct BoxFilter {
-    radius: Vector2f,
+pub struct Filter {
+    eval: Box<dyn Eval>,
+    pub radius: Vector2f,
 }
+
+struct BoxFilter {}
 
 // The same a no filter, and can give aliasing in final image
-impl Filter for BoxFilter {
+impl Eval for BoxFilter {
     fn eval(&self, _: &Vector2f) -> Float {
         1.0
     }
+}
 
-    fn radius(&self) -> Vector2f {
-        self.radius
+impl Eval for Filter {
+    fn eval(&self, point: &Vector2f) -> Float {
+        self.eval.eval(point)
+    }
+}
+
+impl Filter {
+    fn new_box(radius: &Vector2f) -> Filter {
+        Filter { radius: radius.clone(), eval: Box::new(BoxFilter {}) }
     }
 }

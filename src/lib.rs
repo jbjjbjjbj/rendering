@@ -1,5 +1,5 @@
 mod vector;
-mod bounding;
+mod bound;
 mod camera;
 mod spectrum;
 

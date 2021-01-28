@@ -1,6 +1,5 @@
 use crate::{Number, Float};
-use crate::vector::Vector2;
-use std::cmp;
+use crate::vector::*;
 
 pub struct Bound2<T: Number> {
     pub min: Vector2<T>,
@@ -40,6 +39,31 @@ impl<T: Number> Bound2<T> {
         let diag = self.diagonal();
         return diag.x * diag.y;
     }
+}
+
+impl From<&Bound2i> for Bound2f {
+    fn from(b: &Bound2i) -> Self {
+        Self {
+            min: Vector2f::from(b.min),
+            max: Vector2f::from(b.max),
+        }
+    }
+}
+
+impl From<&Bound2f> for Bound2i {
+    fn from(b: &Bound2f) -> Self {
+        Self {
+            min: Vector2i::from(b.min),
+            max: Vector2i::from(b.max),
+        }
+    }
+}
+
+pub fn intersect<T: Number>(a: &Bound2<T>, b: &Bound2<T>) -> Bound2<T> {
+    Bound2::new(
+        &Vector2::from_xy(max(a.min.x, b.min.x), max(a.min.y, b.min.y)),
+        &Vector2::from_xy(min(a.max.x, b.max.x), min(a.max.y, b.max.y)),
+        )
 }
 
 #[cfg(test)]

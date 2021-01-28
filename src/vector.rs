@@ -30,6 +30,25 @@ impl<T: Number> Sub for Vector2<T> {
     }
 }
 
+impl From<Vector2i> for Vector2f {
+    fn from(v: Vector2i) -> Self {
+        Self {
+            x: v.x as Float,
+            y: v.y as Float,
+        }
+    }
+}
+
+impl From<Vector2f> for Vector2i {
+    fn from(v: Vector2f) -> Self {
+        Self {
+            x: v.x as i32,
+            y: v.y as i32,
+        }
+    }
+}
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
