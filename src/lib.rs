@@ -1,7 +1,6 @@
-pub mod vector;
-pub mod bound;
+pub mod core;
 pub mod camera;
-mod spectrum;
+mod scene;
 
 use std::ops::{Add, Sub, Mul};
 use std::cmp;

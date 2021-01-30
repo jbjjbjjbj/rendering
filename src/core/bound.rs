@@ -1,6 +1,8 @@
 use crate::{Number, Float};
-use crate::vector::*;
+use super::vector2::Vector2;
+use crate::core;
 
+#[derive(Clone)]
 pub struct Bound2<T: Number> {
     pub min: Vector2<T>,
     pub max: Vector2<T>
@@ -46,13 +48,17 @@ impl<T: Number> Bound2<T> {
         let diag = self.diagonal();
         return diag.x * diag.y;
     }
+
+    pub fn width(&self) -> T {
+        self.diagonal().x
+    }
 }
 
 impl From<&Bound2i> for Bound2f {
     fn from(b: &Bound2i) -> Self {
         Self {
-            min: Vector2f::from(b.min),
-            max: Vector2f::from(b.max),
+            min: core::Vector2f::from(b.min),
+            max: core::Vector2f::from(b.max),
         }
     }
 }
@@ -60,8 +66,8 @@ impl From<&Bound2i> for Bound2f {
 impl From<&Bound2f> for Bound2i {
     fn from(b: &Bound2f) -> Self {
         Self {
-            min: Vector2i::from(b.min),
-            max: Vector2i::from(b.max),
+            min: core::Vector2i::from(b.min),
+            max: core::Vector2i::from(b.max),
         }
     }
 }
