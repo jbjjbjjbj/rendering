@@ -1,6 +1,7 @@
 use crate::core::Vector3f;
 
 pub struct Ray {
-    origin: Vector3f,
-    direction: Vector3f,
+    pub origin: Vector3f,
+    pub direction: Vector3f,
 }
+

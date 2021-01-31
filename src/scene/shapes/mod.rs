@@ -5,8 +5,6 @@ pub use sphere::Sphere;
 use crate::core::Ray;
 use crate::Float;
 
-trait Shape {
-    // 
-    fn intersect(ray: Ray) -> Float;
-    fn intersect_
+pub trait Shape {
+    fn intersect(&self, ray: &Ray) -> Option<Float>;
 }

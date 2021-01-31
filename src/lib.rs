@@ -1,8 +1,9 @@
 pub mod core;
 pub mod camera;
 mod scene;
+mod render;
 
-use std::ops::{Add, Sub, Mul};
+use std::ops::{Add, Sub, Mul, DivAssign};
 use std::cmp;
 
 pub trait Number:
@@ -10,7 +11,8 @@ pub trait Number:
     cmp::PartialOrd +
     Sub<Output = Self> +
     Add<Output = Self> +
-    Mul<Output = Self>
+    Mul<Output = Self> +
+    DivAssign
 {}
 
 impl Number for usize {}

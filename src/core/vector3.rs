@@ -1,5 +1,5 @@
 use crate::{Float, Number};
-use std::ops::{Sub, Add};
+use std::ops::{Sub, Add, DivAssign};
 
 #[derive(Clone, Copy)]
 pub struct Vector3<T: Number> {
@@ -19,7 +19,7 @@ impl<T: Number> Vector3<T> {
         }
     }
 
-    pub fn new_xy(x: T, y: T, z: T) -> Vector3<T> {
+    pub fn new_xyz(x: T, y: T, z: T) -> Vector3<T> {
         Vector3 { x, y, z}
     }
 }
@@ -27,7 +27,7 @@ impl<T: Number> Vector3<T> {
 impl<T: Number> Sub for Vector3<T> {
     type Output = Self;
     fn sub(self, op: Self) -> Self::Output {
-        Self::new_xy(
+        Self::new_xyz(
             self.x - op.x,
             self.y - op.y,
             self.z - op.z,
@@ -38,10 +38,47 @@ impl<T: Number> Sub for Vector3<T> {
 impl<T: Number> Add for Vector3<T> {
     type Output = Self;
     fn add(self, op: Self) -> Self::Output {
-        Self::new_xy(
+        Self::new_xyz(
             self.x + op.x,
             self.y + op.y,
             self.z + op.z,
         )
+    }
+}
+
+impl<T: Number> DivAssign<T> for Vector3<T> {
+    fn div_assign(&mut self, op: T) {
+        self.x /= op;
+        self.y /= op;
+        self.z /= op;
+    }
+}
+
+impl Vector3f {
+    pub fn len_squared(&self) -> Float {
+        self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
+    pub fn len(&self) -> Float {
+        self.len_squared().sqrt()
+    }
+
+    pub fn dot(&self, op: &Self) -> Float {
+        self.x * op.x + self.y * op.y + self.z * op.z
+    }
+
+    pub fn norm_in(&mut self) {
+        let len = self.len();
+        if len == 0.0 {
+            *self = Self::new(0.0);
+        }
+
+        *self /= len;
+    }
+
+    pub fn norm(&self) -> Self {
+        let mut new = self.clone();
+        new.norm_in();
+        new
     }
 }
