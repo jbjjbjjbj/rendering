@@ -1,7 +1,6 @@
 pub mod core;
 pub mod camera;
 mod scene;
-mod render;
 
 use std::ops::{Add, Sub, Mul, DivAssign};
 use std::cmp;
