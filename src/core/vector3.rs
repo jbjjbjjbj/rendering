@@ -81,4 +81,13 @@ impl Vector3f {
         new.norm_in();
         new
     }
+
+    pub fn cross(&self, op: &Self) -> Self {
+        Self::new_xyz(
+            self.y * op.z - self.z * op.y,
+            self.z * op.x - self.x * op.z,
+            self.x * op.y - self.y * op.x,
+            )
+
+    }
 }

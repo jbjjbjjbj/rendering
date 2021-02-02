@@ -2,6 +2,8 @@ pub mod vector2;
 pub mod vector3;
 pub mod bound;
 pub mod spectrum;
+pub mod transform;
+pub mod matrix4x4;
 mod ray;
 
 pub use vector2::{Vector2i, Vector2f};
