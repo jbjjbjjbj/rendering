@@ -1,19 +1,28 @@
 use crate::core::*;
 use crate::Float;
 
+/// Contains the necesary values when doing calculations
+///
+/// This is not the final RGB value
 #[derive(Clone)]
 pub struct Pixel {
+    /// The sum of the collected samples
     rgb: Spectrum,
+    /// The amount of samples collected
     samples: u32,
 }
 
 pub struct Film {
     size: Vector2i,
-    drawingBound: Bound2i,
+    drawing_bound: Bound2i,
 
     pixels: Vec<Pixel>,
 }
 
+/// FilmTile is a small version of the Film used when rendering
+///
+/// This means that multiple threads can work on the same area and commit their changed when they
+/// are done.
 pub struct FilmTile {
     bounds: Bound2i,
     size: Vector2i,
@@ -49,11 +58,14 @@ impl Film {
         let area = size.x * size.y;
         Film {
             size,
-            drawingBound: Bound2i::new(&Vector2i::new(0), &size),
+            drawing_bound: Bound2i::new(&Vector2i::new(0), &size),
             pixels: vec![Pixel::new(); area as usize],
         }
     }
 
+    /// Creates a new FilmTile from the specified bounds
+    ///
+    /// This tile can later be commited with the commit_tile function
     pub fn get_tile(&self, bound: &Bound2i) -> FilmTile {
         FilmTile::new(
             bound,
@@ -61,6 +73,9 @@ impl Film {
 
     }
 
+    /// Commit a tile back on the film
+    ///
+    /// This will lock the Film while the changes from the Tile is written
     pub fn commit_tile(&mut self, tile: &FilmTile) {
         let offset = tile.bounds.min;
 
@@ -88,6 +103,7 @@ impl FilmTile {
         }
     }
 
+    /// Add a single sample sampled from the scene
     pub fn add_sample(&mut self, point: &Vector2f, c: Spectrum) {
         let point = Vector2i::from(point.floor());
         // Subtract the offset

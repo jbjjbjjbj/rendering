@@ -1,3 +1,6 @@
+//! Used to represent color
+//!
+//! Currently only implements RGB colors
 use crate::Float;
 use std::ops;
 

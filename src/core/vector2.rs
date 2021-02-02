@@ -1,3 +1,6 @@
+//! Implements 2d vectors
+//!
+//! This is implemented generictly with types that fit in the Number trait
 use crate::{Float, Number};
 use std::ops::{Sub, Add};
 

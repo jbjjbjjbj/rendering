@@ -1,3 +1,6 @@
+//! Implements sphere
+//!
+//! Spheres are relatively easy to calculate intersections between
 use crate::Float;
 use crate::core::{Ray, Vector3f};
 use super::Shape;
