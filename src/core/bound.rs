@@ -1,7 +1,9 @@
+//! Implements a 2d region
 use crate::{Number, Float};
 use super::vector2::Vector2;
 use crate::core;
 
+/// Implements a region between min and max
 #[derive(Clone)]
 pub struct Bound2<T: Number> {
     pub min: Vector2<T>,
@@ -26,6 +28,9 @@ fn max<T: Number> (a: T, b: T) -> T {
 }
 
 impl<T: Number> Bound2<T> {
+    /// Creates a new bound from two points
+    ///
+    /// p0 does not have to be smaller than p1
     pub fn new(p0: &Vector2<T>, p1: &Vector2<T>) -> Self {
         let min = Vector2::new_xy(min(p0.x, p1.x), min(p0.y, p1.y));
         let max = Vector2::new_xy(max(p0.x, p1.x), max(p0.y, p1.y));
@@ -40,17 +45,36 @@ impl<T: Number> Bound2<T> {
             )
     }
 
+    /// Calculates the diagonal vector
+    ///
+    /// Can be used to calculate the size of the bound
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pathtrace::core::Bound2i;
+    /// let b = Bound2i::new_xyxy(2, 2, 6, 7);
+    /// let diag = b.diagonal();
+    ///
+    /// assert!(diag.x == 4 && diag.y == 5);
+    /// ```
     pub fn diagonal(&self) -> Vector2<T> {
         self.max - self.min
     }
 
+    /// Calculates the area of of the bounded region
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use pathtrace::core::Bound2i;
+    /// let b = Bound2i::new_xyxy(10, 10, 20, 20);
+    /// 
+    /// assert!(b.area() == 100);
+    /// ```
     pub fn area(&self) -> T {
         let diag = self.diagonal();
         return diag.x * diag.y;
-    }
-
-    pub fn width(&self) -> T {
-        self.diagonal().x
     }
 }
 
@@ -72,6 +96,7 @@ impl From<&Bound2f> for Bound2i {
     }
 }
 
+/// Finds the intersected area between two bounds
 pub fn intersect<T: Number>(a: &Bound2<T>, b: &Bound2<T>) -> Bound2<T> {
     Bound2::new(
         &Vector2::new_xy(max(a.min.x, b.min.x), max(a.min.y, b.min.y)),

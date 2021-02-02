@@ -5,6 +5,9 @@ mod scene;
 use std::ops::{Add, Sub, Mul, DivAssign};
 use std::cmp;
 
+/// Trait used to implement generics
+///
+/// This is used in Bound and Vectors
 pub trait Number:
     Copy +
     cmp::PartialOrd +
@@ -14,9 +17,10 @@ pub trait Number:
     DivAssign
 {}
 
-impl Number for usize {}
 impl Number for i32 {}
 impl Number for f32 {}
 
-// Used throughout the program
-type Float = f32;
+/// Used for representing floating point values throughout the program
+/// 
+/// A higher precision type will require more ram
+pub type Float = f32;

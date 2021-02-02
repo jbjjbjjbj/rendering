@@ -1,3 +1,6 @@
+//! Implements 3d vectors
+//!
+//! Also add more 3d math things needed for shading and 3d calculations.
 use crate::{Float, Number};
 use std::ops::{Sub, Add, DivAssign};
 
@@ -55,6 +58,9 @@ impl<T: Number> DivAssign<T> for Vector3<T> {
 }
 
 impl Vector3f {
+    /// Calculates the length times itself
+    ///
+    /// This is faster than using len * len as the square is ommited
     pub fn len_squared(&self) -> Float {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
@@ -67,6 +73,16 @@ impl Vector3f {
         self.x * op.x + self.y * op.y + self.z * op.z
     }
 
+    /// Inplace normal instead of creating a new vector
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use pathtrace::core::Vector3f;
+    /// let mut v = Vector3f::new_xyz(10.0, 0.0, 0.0);
+    /// v.norm_in();
+    /// assert!(v.x == 1.0);
+    /// ```
     pub fn norm_in(&mut self) {
         let len = self.len();
         if len == 0.0 {

@@ -1,7 +1,22 @@
+//! Implements matrix tranformations
+//!
+//! Used for placing shapes and camera into the scene.
+//! Provides some common initializations methods for transforms like rotation, translate and camera
+//! placement.
+//!
+//! # Examples
+//!
+//! ```
+//! use pathtrace::core::{Vector3f, Transform};
+//!
+//! let t = Transform::new_translate(3.0, 5.0, 6.0);
+//! let v = t.eval_point(&Vector3f::new_xyz(1.0, 1.0, 1.0));
+//!
+//! assert!(v.x == 4.0 && v.y == 6.0 && v.z == 7.0);
+//! ```
 use super::matrix4x4::Matrix4x4f;
 use crate::Float;
 use crate::core::Vector3f;
-use std::ops;
 
 pub struct Transform {
     m: Matrix4x4f,
@@ -14,6 +29,7 @@ impl Transform {
         }
     }
 
+    /// Evaluation a point through the matrix
     pub fn eval_point(&self, p: &Vector3f) -> Vector3f {
         let m = &self.m.m;
         let x = m[0][0]*p.x + m[0][1]*p.y + m[0][2]*p.z + m[0][3];
@@ -29,7 +45,9 @@ impl Transform {
         out
     }
 
-    // Take care when transforming surface normal vector, TODO implement method for this
+    /// Evaluation of a vector
+    ///
+    /// This will not work for normal vectors as they become distorted
     pub fn eval_vector(&self, v: &Vector3f) -> Vector3f {
         let m = &self.m.m;
         let x = m[0][0]*v.x + m[0][1]*v.y + m[0][2]*v.z;
@@ -42,11 +60,11 @@ impl Transform {
 
 // Creation of different transformations
 impl Transform {
-    pub fn new_translate(delta: &Vector3f) -> Self {
+    pub fn new_translate(x: Float, y: Float, z: Float) -> Self {
         Transform { m: Matrix4x4f::new(
-                1.0, 0.0, 0.0, delta.x,
-                0.0, 1.0, 0.0, delta.y,
-                0.0, 0.0, 1.0, delta.z,
+                1.0, 0.0, 0.0, x,
+                0.0, 1.0, 0.0, y,
+                0.0, 0.0, 1.0, z,
                 0.0, 0.0, 0.0, 1.0)
         }
     }
