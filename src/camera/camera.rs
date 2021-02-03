@@ -7,13 +7,13 @@
 //!
 //! ```
 //! use pathtrace::camera::Camera;
-//! use pathtrace::core::{Vector3f, Vector2f};
+//! use pathtrace::core::{Vector3f, Vector2f, Vector2i};
 //!
 //! let cam = Camera::new(
 //!     Vector3f::new(10.0), 
 //!     Vector3f::new(0.0), 
 //!     Vector3f::new_xyz(0.0, 1.0, 0.0), 
-//!     90.0, Vector2f::new(10.0),
+//!     90.0, Vector2i::new(10.0),
 //!     );
 //!
 //! let (r, _) = cam.generate_ray(&Vector2f::new(5.0));
@@ -27,7 +27,7 @@
 //!
 //! ```
 use crate::Float;
-use crate::core::{Vector3f, Vector2f, Ray};
+use crate::core::{Vector3f, Vector2f, Vector2i, Ray};
 
 /// A simple perspective camera
 pub struct Camera {
@@ -45,7 +45,8 @@ impl Camera {
     ///
     /// The field of view specifies how wide the image should be.
     /// Currently must be between [0; 180[.
-    pub fn new(origin: Vector3f, target: Vector3f, up: Vector3f, fov: Float, screensize: Vector2f) -> Camera {
+    pub fn new(origin: Vector3f, target: Vector3f, up: Vector3f, fov: Float, screensize: Vector2i) -> Camera {
+        let screensize = Vector2f::from(screensize);
         // Calculate translation vectors
         let forward = (target - origin).norm();
         let right = up.cross(&origin).norm();

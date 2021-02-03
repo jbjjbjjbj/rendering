@@ -1,5 +1,6 @@
 use crate::core::*;
 use crate::Float;
+use image::{RgbImage, Rgb};
 
 /// Contains the necesary values when doing calculations
 ///
@@ -14,7 +15,7 @@ pub struct Pixel {
 
 pub struct Film {
     size: Vector2i,
-    drawing_bound: Bound2i,
+    pub frame: Bound2i,
 
     pixels: Vec<Pixel>,
 }
@@ -24,13 +25,11 @@ pub struct Film {
 /// This means that multiple threads can work on the same area and commit their changed when they
 /// are done.
 pub struct FilmTile {
-    bounds: Bound2i,
-    size: Vector2i,
+    pub bounds: Bound2i,
+    pub size: Vector2i,
 
     pixels: Vec<Pixel>,
 }
-
-//const HalfPixel = Vector2f::new(0.5);
 
 impl Pixel {
     fn new() -> Pixel {
@@ -43,6 +42,15 @@ impl Pixel {
     fn add(&mut self, c: &Spectrum, weight: Float) {
         self.rgb += &(c * weight);
         self.samples += 1;
+    }
+
+    fn finalize_rgb(&self) -> [u8; 3] {
+        let (r, g, b) = self.rgb.to_rgb(255.0);
+        [
+            r as u8,
+            g as u8,
+            b as u8,
+        ]
     }
 }
 
@@ -58,7 +66,7 @@ impl Film {
         let area = size.x * size.y;
         Film {
             size,
-            drawing_bound: Bound2i::new(&Vector2i::new(0), &size),
+            frame: Bound2i::new(&Vector2i::new(0), &size),
             pixels: vec![Pixel::new(); area as usize],
         }
     }
@@ -79,18 +87,34 @@ impl Film {
     pub fn commit_tile(&mut self, tile: &FilmTile) {
         let offset = tile.bounds.min;
 
-        for y in 0 ..= tile.size.y {
+        for y in 0 .. tile.size.y {
             let rowindex = (offset.y + y) * self.size.x;
             let prowindex = y * tile.size.x;
 
-            for x in 0 ..= tile.size.x {
+            for x in 0 .. tile.size.x {
                 let index = offset.x + x + rowindex;
                 let pindex: i32 = x + prowindex;
 
                 self.pixels[index as usize] += &tile.pixels[pindex as usize];
             }
         }
+    }
 
+    pub fn finalize_image(&self) -> RgbImage {
+        let mut img = RgbImage::new(self.size.x as u32, self.size.y as u32);
+
+        for y in 0..self.size.y {
+            let index = y * self.size.x;
+            for x in 0..self.size.x {
+                img.put_pixel(
+                    x as u32, 
+                    y as u32, 
+                    Rgb(self.pixels[(index + x) as usize].finalize_rgb()),
+                    );
+            }
+        }
+
+        img
     }
 }
 

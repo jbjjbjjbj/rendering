@@ -12,8 +12,12 @@ pub struct Spectrum {
 }
 
 impl Spectrum {
-    fn new_rgb(r: Float, g: Float, b: Float) -> Spectrum {
+    pub fn new_rgb(r: Float, g: Float, b: Float) -> Spectrum {
         Spectrum { c: [r, g, b] }
+    }
+
+    pub fn to_rgb(&self, scale: Float) -> (Float, Float, Float) {
+        (self.c[0] * scale, self.c[1] * scale, self.c[2] * scale)
     }
 }
 

@@ -1,17 +1,37 @@
-use pathtrace::camera::Camera;
-use pathtrace::core::{Vector3f, Vector2f};
-
+use pathtrace::camera::{Camera, Film};
+use pathtrace::scene::Scene;
+use pathtrace::scene::shapes::Sphere;
+use pathtrace::core::{Vector2i, Vector3f};
+use pathtrace::render::{RenderContext, RenderTask};
 
 fn main() {
+    let res = Vector2i::new_xy(500, 500);
 
     let cam = Camera::new(
-        Vector3f::new(10.0), 
-        Vector3f::new(0.0), 
-        Vector3f::new_xyz(0.0, 1.0, 0.0), 
-        90.0, Vector2f::new(10.0),
+        Vector3f::new_xyz(10.0, 0.0, 0.0),
+        Vector3f::new(0.0),
+        Vector3f::new_xyz(0.0, 0.1, 0.0),
+        90.0, res,
         );
 
-    let (r, _) = cam.generate_ray(Vector2f::new(5.0));
+    let mut scn = Scene::new();
+    scn.add_shape(
+        Box::new(Sphere::new(4.0, Vector3f::new(0.0))),
+        );
 
-    println!("r: {}, norm: {}", r.direction, r.direction.norm());
+    let ctx = RenderContext { cam: &cam, scn: &scn };
+
+    let mut film = Film::new(res);
+    let tile = film.get_tile(&film.frame);
+
+    let mut task = RenderTask::new(Box::new(tile), 1);
+    task.render(&ctx);
+
+    film.commit_tile(&task.tile);
+
+    let image = film.finalize_image();
+    if let Err(e) = image.save("test.png") {
+        println!("Failed to save {}", e);
+    }
+
 }

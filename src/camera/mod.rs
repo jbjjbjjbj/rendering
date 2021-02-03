@@ -10,3 +10,4 @@ pub mod film;
 pub mod camera;
 
 pub use camera::Camera;
+pub use film::Film;

@@ -3,6 +3,7 @@
 //! This is implemented generictly with types that fit in the Number trait
 use crate::{Float, Number};
 use std::ops::{Sub, Add};
+use std::fmt;
 
 #[derive(Clone, Copy)]
 pub struct Vector2<T: Number> {
@@ -40,6 +41,12 @@ impl<T: Number> Add for Vector2<T> {
             self.x + op.x,
             self.y + op.y,
         )
+    }
+}
+
+impl<T: Number> fmt::Display for Vector2<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_fmt(format_args!("[{}, {}]", self.x, self.y))
     }
 }
 
