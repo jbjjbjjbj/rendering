@@ -1,5 +1,6 @@
 use pathtrace::camera::{Camera, Film};
 use pathtrace::scene::Scene;
+use pathtrace::trace::Tracer;
 use pathtrace::scene::shapes::Sphere;
 use pathtrace::core::{Vector2i, Vector3f};
 use pathtrace::render::{RenderContext, RenderTask};
@@ -19,7 +20,9 @@ fn main() {
         Box::new(Sphere::new(4.0, Vector3f::new(0.0))),
         );
 
-    let ctx = RenderContext { cam: &cam, scn: &scn };
+    let tracer = Tracer::new();
+
+    let ctx = RenderContext { cam: &cam, scn: &scn, trc: &tracer };
 
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);

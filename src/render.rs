@@ -4,11 +4,10 @@
 use crate::camera::film::FilmTile;
 use crate::camera::Camera;
 use crate::scene::Scene;
+use crate::trace::Tracer;
 
-use crate::core::{Vector2f, Spectrum};
+use crate::core::{Vector2f, Vector3f, Spectrum};
 use crate::Float;
-
-const HALF_PIXEL: Vector2f = Vector2f {x: 0.5, y: 0.5 };
 
 pub struct RenderTask {
     pub tile: Box<FilmTile>,
@@ -18,6 +17,7 @@ pub struct RenderTask {
 pub struct RenderContext<'a> {
     pub scn: &'a Scene,
     pub cam: &'a Camera,
+    pub trc: &'a Tracer,
 }
 
 impl RenderTask {
@@ -29,13 +29,7 @@ impl RenderTask {
         // Create a ray
         let (r, _) = ctx.cam.generate_ray(&Vector2f::new_xy(x as Float, y as Float));
 
-        // Trace ray
-        if let Some(_) = ctx.scn.intersect(r) {
-            return Spectrum::new_rgb(0.5, 0.5, 0.0);
-        }
-
-        Spectrum::new_rgb(0.0, 0.0, 0.0)
-
+        ctx.trc.trace(ctx.scn, &r)
     }
 
     pub fn render(&mut self, ctx: &RenderContext) {

@@ -35,6 +35,12 @@ impl Shape for Sphere {
         }
 
     }
+
+    fn norm_at(&self, point: &Vector3f) -> Vector3f {
+        let mut v = *point - self.center;
+        v /= self.radius;
+        v
+    }
 }
 
 #[cfg(test)]
