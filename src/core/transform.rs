@@ -17,6 +17,7 @@
 use super::matrix4x4::Matrix4x4f;
 use crate::Float;
 use crate::core::Vector3f;
+use std::ops;
 
 pub struct Transform {
     m: Matrix4x4f,
@@ -55,6 +56,22 @@ impl Transform {
         let z = m[2][0]*v.x + m[2][1]*v.y + m[2][2]*v.z;
 
         Vector3f::new_xyz(x, y, z)
+    }
+
+    pub fn inverse(&self) -> Self {
+        Transform {
+            m: self.m.inverse(),
+        }
+    }
+}
+
+impl ops::Mul for Transform {
+    type Output = Transform;
+
+    fn mul(self, op: Self) -> Self::Output {
+        Transform {
+            m: &self.m * &op.m
+        }
     }
 }
 

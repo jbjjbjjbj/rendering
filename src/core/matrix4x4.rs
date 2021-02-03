@@ -1,4 +1,5 @@
 use crate::{Number, Float};
+use std::ops;
 
 pub struct Matrix4x4<T: Number> {
     pub m: [[T; 4]; 4],
@@ -19,6 +20,36 @@ impl<T: Number> Matrix4x4<T> {
                 [v30, v31, v32, v33],
             ],
         }
+    }
+
+    pub fn initial(initial: T) -> Self {
+        Self {
+            m : [ [initial; 4]; 4]
+        }
+    }
+
+    pub fn inverse(&self) -> Self {
+
+    }
+}
+
+impl<T: Number> ops::Mul for &Matrix4x4<T> {
+    type Output = Matrix4x4<T>;
+
+    fn mul(self, op: Self) -> Self::Output {
+        let mut res = Self::Output::initial(Default::default());
+
+        // Not very fast
+        for i in 0..4 {
+            for j in 0..4 {
+                res.m[i][j] = self.m[i][0] * op.m[0][j] +
+                    self.m[i][1] * op.m[1][j] +
+                    self.m[i][2] * op.m[2][j] +
+                    self.m[i][3] * op.m[3][j];
+            }
+        }
+
+        res
     }
 }
 

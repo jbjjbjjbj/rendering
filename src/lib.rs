@@ -10,6 +10,7 @@ use std::cmp;
 /// This is used in Bound and Vectors
 pub trait Number:
     Copy +
+    Default +
     cmp::PartialOrd +
     Sub<Output = Self> +
     Add<Output = Self> +

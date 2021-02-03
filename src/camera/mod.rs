@@ -7,4 +7,4 @@
 
 pub mod film;
 //pub mod filter;
-//pub mod camera;
+pub mod camera;
