@@ -4,6 +4,7 @@ mod scene;
 
 use std::ops::{Add, Sub, Mul, DivAssign};
 use std::cmp;
+use std::fmt;
 
 /// Trait used to implement generics
 ///
@@ -14,7 +15,8 @@ pub trait Number:
     Sub<Output = Self> +
     Add<Output = Self> +
     Mul<Output = Self> +
-    DivAssign
+    DivAssign +
+    fmt::Display
 {}
 
 impl Number for i32 {}

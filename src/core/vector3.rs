@@ -2,7 +2,8 @@
 //!
 //! Also add more 3d math things needed for shading and 3d calculations.
 use crate::{Float, Number};
-use std::ops::{Sub, Add, DivAssign};
+use std::ops::{Mul, Sub, Add, DivAssign};
+use std::fmt;
 
 #[derive(Clone, Copy)]
 pub struct Vector3<T: Number> {
@@ -49,11 +50,28 @@ impl<T: Number> Add for Vector3<T> {
     }
 }
 
+impl<T: Number> Mul<T> for Vector3<T> {
+    type Output = Self;
+    fn mul(self, op: T) -> Self::Output {
+        Self::Output::new_xyz(
+            self.x * op,
+            self.y * op,
+            self.z * op,
+            )
+    }
+}
+
 impl<T: Number> DivAssign<T> for Vector3<T> {
     fn div_assign(&mut self, op: T) {
         self.x /= op;
         self.y /= op;
         self.z /= op;
+    }
+}
+
+impl<T: Number> fmt::Display for Vector3<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_fmt(format_args!("[{}, {}, {}]", self.x, self.y, self.z))
     }
 }
 
@@ -96,5 +114,14 @@ impl Vector3f {
         let mut new = self.clone();
         new.norm_in();
         new
+    }
+
+    pub fn cross(&self, op: &Self) -> Self {
+        Self::new_xyz(
+            self.y * op.z - self.z * op.y,
+            self.z * op.x - self.x * op.z,
+            self.x * op.y - self.y * op.x,
+            )
+
     }
 }
