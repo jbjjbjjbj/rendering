@@ -33,6 +33,18 @@ impl std::ops::Mul<Float> for &Spectrum {
     }
 }
 
+impl std::ops::Div<Float> for &Spectrum {
+    type Output = Spectrum;
+
+    fn div(self, op: Float) -> Self::Output {
+        Self::Output::new_rgb(
+            self.c[0] / op,
+            self.c[1] / op,
+            self.c[2] / op,
+            )
+    }
+}
+
 impl std::ops::AddAssign<&Self> for Spectrum {
     fn add_assign(&mut self, op: &Self) {
         self.c[0] += op.c[0];

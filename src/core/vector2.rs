@@ -60,8 +60,8 @@ impl Vector2f {
 
     pub fn floor(&self) -> Self {
         Self::new_xy(
-            self.x.ceil(),
-            self.y.ceil()
+            self.x.floor(),
+            self.y.floor()
             )
     }
 }

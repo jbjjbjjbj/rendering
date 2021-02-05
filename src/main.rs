@@ -4,6 +4,7 @@ use pathtrace::trace::Tracer;
 use pathtrace::scene::shapes::Sphere;
 use pathtrace::core::{Vector2i, Vector3f};
 use pathtrace::render::{RenderContext, RenderTask};
+use pathtrace::sample::UniformSampler;
 
 fn main() {
     let res = Vector2i::new_xy(500, 500);
@@ -22,13 +23,15 @@ fn main() {
 
     let tracer = Tracer::new();
 
+    let mut sampler = UniformSampler::new();
+
     let ctx = RenderContext { cam: &cam, scn: &scn, trc: &tracer };
 
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);
 
-    let mut task = RenderTask::new(Box::new(tile), 1);
-    task.render(&ctx);
+    let mut task = RenderTask::new(Box::new(tile), 500);
+    task.render(&ctx, &mut sampler);
 
     film.commit_tile(&task.tile);
 

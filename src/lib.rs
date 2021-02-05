@@ -3,6 +3,7 @@ pub mod camera;
 pub mod render;
 pub mod scene;
 pub mod trace;
+pub mod sample;
 
 use std::ops::{Add, Sub, Mul, DivAssign};
 use std::cmp;
