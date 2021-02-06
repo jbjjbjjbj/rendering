@@ -40,12 +40,13 @@ impl Pixel {
     }
 
     fn add(&mut self, c: &Spectrum, weight: Float) {
-        self.rgb += &(c * weight);
+        self.rgb += &(*c * weight);
         self.samples += 1;
     }
 
     fn finalize_rgb(&self) -> [u8; 3] {
-        let (r, g, b) = (&self.rgb / (self.samples as Float)).to_rgb(255.0);
+        let spc = (self.rgb / (self.samples as Float)).gamma_correct();
+        let (r, g, b) = spc.to_rgb(255.0);
         [
             r as u8,
             g as u8,

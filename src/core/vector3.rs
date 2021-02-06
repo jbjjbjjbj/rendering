@@ -50,6 +50,18 @@ impl<T: Number> Add for Vector3<T> {
     }
 }
 
+impl<T: Number> Add<T> for Vector3<T> {
+    type Output = Self;
+
+    fn add(self, op: T) -> Self::Output {
+        Self::new_xyz(
+            self.x + op,
+            self.y + op,
+            self.z + op,
+        )
+    }
+}
+
 impl<T: Number> Mul<T> for Vector3<T> {
     type Output = Self;
     fn mul(self, op: T) -> Self::Output {
@@ -114,6 +126,7 @@ impl Vector3f {
     /// assert!(v.x == 1.0);
     /// ```
     pub fn norm_in(&mut self) {
+        // TODO Experiment with checking for normality with len_squared
         let len = self.len();
         if len == 0.0 {
             *self = Self::new(0.0);

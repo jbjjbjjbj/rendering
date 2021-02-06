@@ -1,24 +1,36 @@
 use crate::scene::Scene;
 use crate::core::{Spectrum, Ray, Vector3f};
+use crate::sample::Sampler;
+
+mod pathtrace;
+pub use pathtrace::PathTracer;
 
 /// Simple surface normal tracer
 ///
 /// This ray tracer bases color values on the hit surface normals
-pub struct NormTracer {}
+pub struct NormTracer<'a> {
+    scn: &'a Scene,
+}
 
 /// Alias for chosen trace implementation.
 ///
 /// This is swiched at compile time to save alot of time.
-pub type Tracer = NormTracer;
+pub type DefaultTracer<'a> = PathTracer<'a>;
 
-impl NormTracer {
-    pub fn new() -> NormTracer {
-        NormTracer {}
+pub trait Tracer {
+    fn trace(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum;
+}
+
+impl NormTracer<'_> {
+    pub fn new(scn: &Scene) -> NormTracer {
+        NormTracer {scn}
     }
+}
 
-    pub fn trace(&self, scn: &Scene, ray: &Ray) -> Spectrum {
+impl Tracer for NormTracer<'_> {
+    fn trace(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum {
         // Trace ray
-        if let Some(i) = scn.intersect(ray) {
+        if let Some(i) = self.scn.intersect(ray) {
             let norm = i.n * 0.5 + Vector3f::new(0.5);
 
             return Spectrum::new_rgb(norm.x, norm.y, norm.z);

@@ -6,7 +6,7 @@ use std::ops;
 
 // TODO implement SampledSpectrum instead for nicer images
 
-#[derive(Clone, Default)]
+#[derive(Clone, Copy, Default)]
 pub struct Spectrum {
     c: [Float; 3],
 }
@@ -19,9 +19,17 @@ impl Spectrum {
     pub fn to_rgb(&self, scale: Float) -> (Float, Float, Float) {
         (self.c[0] * scale, self.c[1] * scale, self.c[2] * scale)
     }
+
+    pub fn gamma_correct(&self) -> Self {
+        Self::new_rgb(
+            self.c[0].sqrt(),
+            self.c[1].sqrt(),
+            self.c[2].sqrt(),
+            )
+    }
 }
 
-impl std::ops::Mul<Float> for &Spectrum {
+impl std::ops::Mul<Float> for Spectrum {
     type Output = Spectrum;
 
     fn mul(self, op: Float) -> Self::Output {
@@ -33,7 +41,7 @@ impl std::ops::Mul<Float> for &Spectrum {
     }
 }
 
-impl std::ops::Div<Float> for &Spectrum {
+impl std::ops::Div<Float> for Spectrum {
     type Output = Spectrum;
 
     fn div(self, op: Float) -> Self::Output {
@@ -41,6 +49,18 @@ impl std::ops::Div<Float> for &Spectrum {
             self.c[0] / op,
             self.c[1] / op,
             self.c[2] / op,
+            )
+    }
+}
+
+impl std::ops::Add for Spectrum {
+    type Output = Spectrum;
+
+    fn add(self, op: Self) -> Self::Output {
+        Self::Output::new_rgb(
+            self.c[0] + op.c[0],
+            self.c[1] + op.c[1],
+            self.c[2] + op.c[2],
             )
     }
 }

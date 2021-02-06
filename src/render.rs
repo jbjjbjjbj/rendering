@@ -3,11 +3,10 @@
 //! This is not a final design
 use crate::camera::film::FilmTile;
 use crate::camera::Camera;
-use crate::scene::Scene;
-use crate::trace::Tracer;
+use crate::trace::{DefaultTracer, Tracer};
 use crate::sample::Sampler;
 
-use crate::core::{Vector2f, Spectrum};
+use crate::core::{Vector2f};
 use crate::Float;
 
 pub struct RenderTask {
@@ -16,9 +15,8 @@ pub struct RenderTask {
 }
 
 pub struct RenderContext<'a> {
-    pub scn: &'a Scene,
     pub cam: &'a Camera,
-    pub trc: &'a Tracer,
+    pub trc: &'a DefaultTracer<'a>,
 }
 
 impl RenderTask {
@@ -35,7 +33,7 @@ impl RenderTask {
             // Create a ray
             let (r, _) = ctx.cam.generate_ray(&p);
 
-            self.tile.add_sample(&p, ctx.trc.trace(ctx.scn, &r));
+            self.tile.add_sample(&p, ctx.trc.trace(sampler, &r));
         }
     }
 

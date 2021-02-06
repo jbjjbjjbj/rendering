@@ -8,6 +8,14 @@ pub struct Ray {
 }
 
 impl Ray {
+    pub fn new_to(origin: Vector3f, target: Vector3f) -> Ray {
+        let dir = (target - origin).norm();
+        Ray {
+            origin,
+            direction: dir
+        }
+    }
+
     pub fn at(&self, t: Float) -> Vector3f {
         self.origin + self.direction * t
     }

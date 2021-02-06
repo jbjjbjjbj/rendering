@@ -1,4 +1,3 @@
-use crate::core::Vector2f;
 use crate::Float;
 use super::Sampler;
 
@@ -24,9 +23,5 @@ impl UniformSampler {
 impl Sampler for UniformSampler {
     fn get_sample(&mut self) -> Float {
         self.d.sample(&mut self.r)
-    }
-
-    fn get_sample_2d(&mut self) -> Vector2f {
-        Vector2f::new_xy(self.get_sample(), self.get_sample())
     }
 }
