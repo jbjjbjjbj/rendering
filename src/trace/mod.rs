@@ -19,8 +19,7 @@ impl NormTracer {
     pub fn trace(&self, scn: &Scene, ray: &Ray) -> Spectrum {
         // Trace ray
         if let Some(i) = scn.intersect(ray) {
-            let p = ray.at(i.t);
-            let norm = i.shp.norm_at(&p) * 0.5 + Vector3f::new(0.5);
+            let norm = i.n * 0.5 + Vector3f::new(0.5);
 
             return Spectrum::new_rgb(norm.x, norm.y, norm.z);
         }

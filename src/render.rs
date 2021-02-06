@@ -41,8 +41,8 @@ impl RenderTask {
 
     pub fn render(&mut self, ctx: &RenderContext, sampler: &mut dyn Sampler) {
         let b = self.tile.bounds.clone();
-        for x in b.min.x .. b.max.x {
-            for y in b.min.y .. b.max.y {
+        for y in b.min.y .. b.max.y {
+            for x in b.min.x .. b.max.x {
                 self.render_at(ctx, x, y, sampler);
             }
         }

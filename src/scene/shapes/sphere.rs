@@ -3,7 +3,7 @@
 //! Spheres are relatively easy to calculate intersections between
 use crate::Float;
 use crate::core::{Ray, Vector3f};
-use super::Shape;
+use crate::scene::{Hittable, Intersection};
 
 pub struct Sphere {
     radius: Float,
@@ -17,11 +17,17 @@ impl Sphere {
             center,
         }
     }
+
+    fn norm_at(&self, point: &Vector3f) -> Vector3f {
+        let mut v = *point - self.center;
+        v /= self.radius;
+        v
+    }
 }
 
-impl Shape for Sphere {
+impl Hittable for Sphere {
     // Implementation from ray tracing in a weekend
-    fn intersect(&self, ray: &Ray) -> Option<Float> {
+    fn intersect(&self, ray: &Ray) -> Option<Intersection> {
         let oc = ray.origin - self.center;
         let a = ray.direction.len_squared();
         let half_b = oc.dot(&ray.direction);
@@ -29,17 +35,19 @@ impl Shape for Sphere {
         let disc = half_b*half_b - a*c;
 
         if disc < 0.0 {
-            None
+            return None
         } else {
-            Some( (-half_b - disc.sqrt()) / a)
+            let distance = (-half_b - disc.sqrt()) / a;
+            if distance < 0.0 {
+                return None
+            }
+            let w = ray.at(distance);
+            Some(Intersection {
+                n: self.norm_at(&w),
+                p: w,
+            })
         }
 
-    }
-
-    fn norm_at(&self, point: &Vector3f) -> Vector3f {
-        let mut v = *point - self.center;
-        v /= self.radius;
-        v
     }
 }
 

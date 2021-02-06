@@ -1,4 +1,4 @@
-use pathtrace::camera::{Camera, Film};
+use pathtrace::camera::{Camera, Film, CameraSettings};
 use pathtrace::scene::Scene;
 use pathtrace::trace::Tracer;
 use pathtrace::scene::shapes::Sphere;
@@ -9,17 +9,19 @@ use pathtrace::sample::UniformSampler;
 fn main() {
     let res = Vector2i::new_xy(500, 500);
 
-    let cam = Camera::new(
-        Vector3f::new_xyz(10.0, 0.0, 0.0),
-        Vector3f::new(0.0),
-        Vector3f::new_xyz(0.0, 0.1, 0.0),
-        90.0, res,
-        );
+    let cam = Camera::new(&CameraSettings {
+        target: Vector3f::new_xyz(0.0, 0.0, -1.0),
+        origin: Vector3f::new_xyz(0.0, 0.0, 0.0),
+        up: Vector3f::new_xyz(0.0, 1.0, 0.0),
+        fov: 90.0, 
+        screensize: res,
+    });
 
     let mut scn = Scene::new();
-    scn.add_shape(
-        Box::new(Sphere::new(4.0, Vector3f::new(0.0))),
-        );
+    scn.add_shapes(vec![
+        Box::new(Sphere::new(0.5, Vector3f::new_xyz(0.0, 0.0, -1.0))),
+        Box::new(Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0))),
+    ]);
 
     let tracer = Tracer::new();
 
@@ -30,7 +32,7 @@ fn main() {
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);
 
-    let mut task = RenderTask::new(Box::new(tile), 500);
+    let mut task = RenderTask::new(Box::new(tile), 10);
     task.render(&ctx, &mut sampler);
 
     film.commit_tile(&task.tile);

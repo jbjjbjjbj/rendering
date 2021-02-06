@@ -9,5 +9,5 @@ pub mod film;
 //pub mod filter;
 pub mod camera;
 
-pub use camera::Camera;
+pub use camera::{Camera, CameraSettings};
 pub use film::Film;

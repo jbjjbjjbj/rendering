@@ -5,7 +5,7 @@ pub mod scene;
 pub mod trace;
 pub mod sample;
 
-use std::ops::{Add, Sub, Mul, DivAssign};
+use std::ops::{Add, Sub, Mul, DivAssign, Neg};
 use std::cmp;
 use std::fmt;
 
@@ -18,6 +18,7 @@ pub trait Number:
     Sub<Output = Self> +
     Add<Output = Self> +
     Mul<Output = Self> +
+    Neg<Output = Self> + 
     DivAssign +
     fmt::Display
 {}
