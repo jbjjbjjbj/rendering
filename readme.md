@@ -7,7 +7,7 @@ My first attempt can be seen here [github](https://github.com/jbjjbjjbj/raytrace
 
 ## Preview
 
-![render](https://git.jtle.dk/pathtrace/plain/generated.png?h=rendered)
+![render](https://git.jtle.dk/pathtrace/plain/generated.png?h=old_rendered)
 
 ## Build requirements
 
