@@ -1,48 +1,25 @@
-# Pathtracing
+# Rendering in rust
 
-Second attempt at a renderer, written in C++ instead of C to compare languages.
-This is also my first big project in C++.
+This is a (not finished) ray tracer written in rust.
+It is based on the book serie [Ray Tracing In One Weekend](https://raytracing.github.io/) and [Physics Based Rendering](http://www.pbr-book.org/).
 
-My first attempt can be seen here [github](https://github.com/jbjjbjjbj/raytrace) and here [cgit](https://git.jtle.dk/raytrace/about/).
+This rust version is my third implementation, the previous being:
 
-## Preview
+
+- [Raytracing in c](https://git.jtle.dk/raytrace/about/)
+    This is the one which gives the best results,
+    however as my ambitions for the project grew as did my requirement for more language features.
+- [Pathtracing in rust](https://git.jtle.dk/pathtrace/about/)
+I never really finished it before changing to rust.
+    However it had a really cool qt gui, updating as samples were added.
+
+## Rendered image
 
 ![render](https://git.jtle.dk/pathtrace/plain/generated.png?h=rendered)
 
-## Build requirements
+## Goals
 
-- Catch2
-- Qt5
-
-## Building
-
-This is just standard cmake building.
-
-```
-mkdir build
-cd build
-cmake ../
-make
-```
-
-The program does currently not have any options, so just run it.
-
-```
-./pathtracing
-```
-
-
-## Testing
-
-To test the program follow the steps above but instead of `make` run `make test`.
-
-```
-make test
-```
-
-Then run the test executable.
-Remember to rerun `make test` when changing source files.
-
-```
-./run_test
-```
+- [ ] Render [Cornell box](https://en.wikipedia.org/wiki/Cornell_box)
+- [ ] Render collection of circles outside, with blurry background
+- [ ] Render [Utah teapot](https://en.wikipedia.org/wiki/Utah_teapot)
+- [ ] Render [Stanford dragon](https://en.wikipedia.org/wiki/Stanford_dragon)
