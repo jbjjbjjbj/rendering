@@ -132,11 +132,14 @@ impl FilmTile {
     pub fn add_sample(&mut self, inp: &Vector2f, c: Spectrum) {
         let point = Vector2i::from(inp.floor());
         // Subtract the offset
-        let point = point - self.bounds.min;
+        let point = (point - self.bounds.min).cap(self.size.x-1, self.size.y-1);
 
         let index = point.x + point.y * self.size.x;
 
-        let pixel = self.pixels.get_mut(index as usize).unwrap();
-        pixel.add(&c, 1.0);
+        if let Some(pixel) = self.pixels.get_mut(index as usize) {
+            pixel.add(&c, 1.0);
+        } else {
+            println!("Could not get pixel {} inp: {}, index: {}", point, inp, index);
+        }
     }
 }

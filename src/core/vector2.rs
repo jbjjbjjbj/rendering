@@ -4,6 +4,7 @@
 use crate::{Float, Number};
 use std::ops::{Sub, Add};
 use std::fmt;
+use std::cmp::min;
 
 #[derive(Clone, Copy)]
 pub struct Vector2<T: Number> {
@@ -81,6 +82,15 @@ impl From<Vector2f> for Vector2i {
             x: v.x as i32,
             y: v.y as i32,
         }
+    }
+}
+
+impl Vector2i {
+    pub fn cap(&self, x: i32, y: i32) -> Self {
+        Self::new_xy(
+            min(self.x, x),
+            min(self.y, y),
+            )
     }
 }
 

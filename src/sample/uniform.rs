@@ -15,13 +15,14 @@ impl UniformSampler {
     pub fn new() -> Self {
         Self {
             r: Pcg32::seed_from_u64(1),
-            d: Uniform::from(0.0..1.0),
+            d: Uniform::new(0.0, 1.0),
         }
     }
 }
 
 impl Sampler for UniformSampler {
     fn get_sample(&mut self) -> Float {
-        self.d.sample(&mut self.r)
+        let sample = self.d.sample(&mut self.r);
+        sample
     }
 }

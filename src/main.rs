@@ -32,7 +32,7 @@ fn main() {
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);
 
-    let mut task = RenderTask::new(Box::new(tile), 10);
+    let mut task = RenderTask::new(Box::new(tile), 100);
     task.render(&ctx, &mut sampler);
 
     film.commit_tile(&task.tile);

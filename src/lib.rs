@@ -8,6 +8,7 @@ pub mod sample;
 use std::ops::{Add, Sub, Mul, DivAssign, Neg};
 use std::cmp;
 use std::fmt;
+use std::f64::consts::PI;
 
 /// Trait used to implement generics
 ///
@@ -25,8 +26,11 @@ pub trait Number:
 
 impl Number for i32 {}
 impl Number for f32 {}
+impl Number for f64 {}
 
 /// Used for representing floating point values throughout the program
 /// 
 /// A higher precision type will require more ram
-pub type Float = f32;
+pub type Float = f64;
+
+pub const M_PI: Float = PI;

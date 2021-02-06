@@ -1,6 +1,5 @@
-use crate::Float;
+use crate::{M_PI, Float};
 use crate::core::{Vector3f, Vector2f};
-use std::f32::consts::PI;
 
 mod uniform;
 
@@ -20,7 +19,7 @@ pub trait Sampler {
     fn get_unit_vector(&mut self) -> Vector3f {
         let s2d = self.get_sample_2d();
 
-        let lambda = distribute_between(s2d.x, -PI, PI);
+        let lambda = distribute_between(s2d.x, -M_PI, M_PI);
         let costheta = 2.0 * s2d.y - 1.0;
         let sintheta = costheta.acos().sin();
 
