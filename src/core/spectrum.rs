@@ -41,6 +41,18 @@ impl std::ops::Mul<Float> for Spectrum {
     }
 }
 
+impl std::ops::Mul for Spectrum {
+    type Output = Spectrum;
+
+    fn mul(self, op: Self) -> Self::Output {
+        Self::Output::new_rgb(
+            self.c[0] * op.c[0],
+            self.c[1] * op.c[1],
+            self.c[2] * op.c[2],
+            )
+    }
+}
+
 impl std::ops::Div<Float> for Spectrum {
     type Output = Spectrum;
 

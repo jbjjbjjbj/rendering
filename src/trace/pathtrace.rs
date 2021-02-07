@@ -20,11 +20,10 @@ impl PathTracer<'_> {
 
     pub fn trace_recur(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum {
 
-        if let Some(i) = self.scn.intersect(ray) {
-            // Get a random direction in the hemisphere a i.p
-            // This is Lambertian reflection
-            let target = i.p + i.n + sampler.get_unit_vector();
-            return self.trace_recur(sampler, &Ray::new_to(i.p, target)) * 0.5;
+        if let Some((mat, i)) = self.scn.intersect(ray) {
+            if let Some((scalar, nray)) = mat.scatter(ray, &i, sampler) {
+                return self.trace_recur(sampler, &nray) * scalar;
+            }
         }
 
         // Simulates a sky

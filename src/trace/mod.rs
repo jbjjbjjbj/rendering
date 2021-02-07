@@ -28,9 +28,9 @@ impl NormTracer<'_> {
 }
 
 impl Tracer for NormTracer<'_> {
-    fn trace(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum {
-        // Trace ray
-        if let Some(i) = self.scn.intersect(ray) {
+    fn trace(&self, _: &mut dyn Sampler, ray: &Ray) -> Spectrum {
+        // Trace ray, we dont care about material
+        if let Some((_, i)) = self.scn.intersect(ray) {
             let norm = i.n * 0.5 + Vector3f::new(0.5);
 
             return Spectrum::new_rgb(norm.x, norm.y, norm.z);

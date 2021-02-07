@@ -4,6 +4,7 @@ pub mod render;
 pub mod scene;
 pub mod trace;
 pub mod sample;
+pub mod material;
 
 use std::ops::{Add, Sub, Mul, DivAssign, Neg};
 use std::cmp;
@@ -34,3 +35,4 @@ impl Number for f64 {}
 pub type Float = f64;
 
 pub const M_PI: Float = PI;
+pub const NEAR_ZERO: Float = 1e-8;

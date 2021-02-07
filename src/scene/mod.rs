@@ -6,27 +6,20 @@ pub mod shapes;
 mod scene;
 pub use scene::*;
 
-use crate::core::{Ray, Vector3f};
-use crate::Float;
+use std::rc::Rc;
+use crate::core::Hittable;
+use crate::material::Material;
 
-/// Returns the context of a intersection
-pub struct Intersection {
-    /// Normal vector at intersection
-    pub n: Vector3f,
-    pub p: Vector3f,
+pub struct Object {
+    pub shape: Box<dyn Hittable>,
+    pub mat: Rc<dyn Material>,
 }
 
-impl Intersection {
-    pub fn norm_against_ray(&self, r: &Ray) -> Vector3f {
-        if self.n.dot(&r.direction) < 0.0 {
-            self.n
-        } else {
-            -self.n
+impl Object {
+    pub fn new(mat: Rc<dyn Material>, shape: Box<dyn Hittable>) -> Self {
+        Object {
+            mat,
+            shape,
         }
     }
-}
-
-/// Defines a common trait for objects in the scene
-pub trait Hittable {
-    fn intersect(&self, ray: &Ray) -> Option<Intersection>;
 }

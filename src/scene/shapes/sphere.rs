@@ -2,8 +2,7 @@
 //!
 //! Spheres are relatively easy to calculate intersections between
 use crate::Float;
-use crate::core::{Ray, Vector3f};
-use crate::scene::{Hittable, Intersection};
+use crate::core::{Ray, Vector3f, Hittable, Intersection};
 
 pub struct Sphere {
     radius: Float,

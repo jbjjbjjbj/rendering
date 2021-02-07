@@ -1,7 +1,7 @@
 //! Implements 3d vectors
 //!
 //! Also add more 3d math things needed for shading and 3d calculations.
-use crate::{Float, Number};
+use crate::{Float, Number, NEAR_ZERO};
 use std::ops::{Mul, Sub, Add, DivAssign, Neg};
 use std::fmt;
 
@@ -148,5 +148,14 @@ impl Vector3f {
             self.x * op.y - self.y * op.x,
             )
 
+    }
+
+    /// Check if vector is close to [0, 0, 0]
+    ///
+    /// This is based on the NEAR_ZERO constant
+    pub fn near_zero(&self) -> bool {
+        (self.x.abs() < NEAR_ZERO) &&
+            (self.y.abs() < NEAR_ZERO) &&
+            (self.z.abs() < NEAR_ZERO)
     }
 }
