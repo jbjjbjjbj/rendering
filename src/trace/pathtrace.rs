@@ -18,11 +18,17 @@ impl PathTracer<'_> {
         }
     }
 
-    pub fn trace_recur(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum {
+    pub fn trace_recur(&self, sampler: &mut dyn Sampler, ray: &Ray, depth: i32) -> Spectrum {
+
+        if depth == 0 {
+            return Spectrum::ZERO;
+        }
 
         if let Some((mat, i)) = self.scn.intersect(ray) {
             if let Some((scalar, nray)) = mat.scatter(ray, &i, sampler) {
-                return self.trace_recur(sampler, &nray) * scalar;
+                return self.trace_recur(sampler, &nray, depth-1) * scalar;
+            } else {
+                return Spectrum::ZERO;
             }
         }
 
@@ -35,6 +41,6 @@ impl PathTracer<'_> {
 
 impl Tracer for PathTracer<'_> {
     fn trace(&self, sampler: &mut dyn Sampler, ray: &Ray) -> Spectrum {
-        self.trace_recur(sampler, ray)
+        self.trace_recur(sampler, ray, self.depth)
     }
 }

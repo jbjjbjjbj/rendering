@@ -6,7 +6,7 @@ pub mod trace;
 pub mod sample;
 pub mod material;
 
-use std::ops::{Add, Sub, Mul, DivAssign, Neg};
+use std::ops::{Add, Sub, Mul, DivAssign, AddAssign, Neg};
 use std::cmp;
 use std::fmt;
 use std::f64::consts::PI;
@@ -22,6 +22,7 @@ pub trait Number:
     Mul<Output = Self> +
     Neg<Output = Self> + 
     DivAssign +
+    AddAssign +
     fmt::Display
 {}
 

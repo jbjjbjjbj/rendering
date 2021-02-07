@@ -2,7 +2,7 @@
 //!
 //! Also add more 3d math things needed for shading and 3d calculations.
 use crate::{Float, Number, NEAR_ZERO};
-use std::ops::{Mul, Sub, Add, DivAssign, Neg};
+use std::ops::{Mul, Sub, Add, DivAssign, Neg, AddAssign};
 use std::fmt;
 
 #[derive(Clone, Copy)]
@@ -82,6 +82,14 @@ impl<T: Number> Neg for Vector3<T> {
             -self.y,
             -self.z,
             )
+    }
+}
+
+impl<T: Number> AddAssign<&Self> for Vector3<T> {
+    fn add_assign(&mut self, op: &Self) {
+        self.x += op.x;
+        self.y += op.y;
+        self.z += op.z;
     }
 }
 

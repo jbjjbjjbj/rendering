@@ -12,6 +12,8 @@ pub struct Spectrum {
 }
 
 impl Spectrum {
+    pub const ZERO: Self = Spectrum { c: [0.0; 3] };
+
     pub fn new_rgb(r: Float, g: Float, b: Float) -> Spectrum {
         Spectrum { c: [r, g, b] }
     }
