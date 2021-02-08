@@ -7,6 +7,11 @@ pub struct Scene {
     objs: Vec<Object>,
 }
 
+pub struct SceneIntersect<'a> {
+    pub mat: &'a dyn Material,
+    pub i: Intersection,
+}
+
 impl Scene {
     pub fn new() -> Self {
         Self {
@@ -24,14 +29,19 @@ impl Scene {
         }
     }
 
-    pub fn intersect(&self, ray: &Ray) -> Option<(&dyn Material, Intersection)> {
+    pub fn intersect(&self, ray: &Ray) -> Option<SceneIntersect> {
+        let mut min: Option<SceneIntersect> = None;
+
         for obj in self.objs.iter() {
             if let Some(i) = obj.shape.intersect(&ray) {
-                return Some((obj.mat.as_ref(), i))
+                match min {
+                    Some(ref si) if si.i.t < i.t => (),
+                    _ => min = Some(SceneIntersect {i, mat: obj.mat.as_ref() }),
+                }
             }
         }
 
-        None
+        min
     }
 }
 

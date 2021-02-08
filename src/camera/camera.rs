@@ -6,23 +6,28 @@
 //! # Examples
 //!
 //! ```
-//! use pathtrace::camera::Camera;
-//! use pathtrace::core::{Vector3f, Vector2f, Vector2i};
+//! use rendering::camera::{CameraSettings, Camera};
+//! use rendering::core::{Vector3f, Vector2f, Vector2i};
 //!
-//! let cam = Camera::new(
-//!     Vector3f::new(10.0), 
-//!     Vector3f::new(0.0), 
-//!     Vector3f::new_xyz(0.0, 1.0, 0.0), 
-//!     90.0, Vector2i::new(10.0),
-//!     );
+//! let set = CameraSettings {
+//!     origin: Vector3f::new(10.0),
+//!     target: Vector3f::new(0.0),
+//!     up: Vector3f::new_xyz(0.0, 1.0, 0.0),
+//!     fov: 90.0, 
+//!     filmsize: Vector2i::new(10),
+//!     focus: None,
+//!     aperture: 0.0,
+//! };
+//!
+//! let cam = Camera::new(&set);
 //!
 //! let (r, _) = cam.generate_ray(&Vector2f::new(5.0));
 //! let dir = r.direction;
 //!
 //! assert!(
-//!     dir.x == -0.44792563 &&
-//!     dir.y == -0.659974 &&
-//!     dir.z == -0.6031559
+//!     dir.x == -0.6031558065478413 &&
+//!     dir.y == -0.6599739684616743 &&
+//!     dir.z == -0.4479257014065748
 //!     );
 //!
 //! ```
@@ -33,43 +38,58 @@ use crate::core::{Vector3f, Vector2f, Vector2i, Ray};
 pub struct Camera {
     /// The camera origin in the screen
     origin: Vector3f,
-    /// Vector from camera origin to the screen lower left corner
+    /// Vector from camera origin to the screen lower left corner of the film plane
     screen_origin: Vector3f,
     /// Scaling vectors from screen_origin
     qx: Vector3f,
     qy: Vector3f,
 }
 
+/// Settings for initializing camera
 pub struct CameraSettings {
+    /// Where rays originate from
     pub origin: Vector3f,
+    /// Point where center of image is pointed at
     pub target: Vector3f,
+    /// Vector that will be up in the resulting image
     pub up: Vector3f,
+    /// The vertical field of view in degrees.
+    /// Currently must be between [0; 180[.
     pub fov: Float,
-    pub screensize: Vector2i,
+    /// The film aspect ratio, height / width
+    pub filmsize: Vector2i,
+    /// The lens aperture
+    pub aperture: Float,
+    /// The distance to the focus plane
+    ///
+    /// if None it will be set to the distance between origin and target
+    pub focus: Option<Float>,
 }
 
 impl Camera {
     /// Create a new camera look at a target
-    ///
-    /// The field of view specifies how wide the image should be.
-    /// Currently must be between [0; 180[.
     pub fn new(set: &CameraSettings) -> Camera {
-        let screensize = Vector2f::from(set.screensize);
+        let filmsize = Vector2f::from(set.filmsize);
         // Calculate translation vectors
-        let forward = (set.target - set.origin).norm();
+        let mut forward = set.target - set.origin;
+
+        let focus = set.focus.unwrap_or(forward.len());
+
+        forward.norm_in();
+
         let right = set.up.cross(&forward).norm();
         let newup = forward.cross(&right).norm();
 
-        // Calculate screen size from fov
-        let aspect = screensize.y / screensize.x;
-        let width = 2.0 * (set.fov / 2.0).to_radians().tan();
+        let aspect = (filmsize.y) / (filmsize.x);
+        // Calculate screen size from fov and focus distance
+        let width = 2.0 * focus * (set.fov / 2.0).to_radians().tan();
         let height = aspect * width;
 
         // Calculate screen scaling vectors
-        let qx = right * (width / (screensize.x - 1.0));
-        let qy = newup * (height / (screensize.y - 1.0));
+        let qx = right * (width / (filmsize.x - 1.0));
+        let qy = newup * (height / (filmsize.y - 1.0));
 
-        let screen_origin = forward - (right * (width/2.0)) + (newup * (height/2.0));
+        let screen_origin = forward * focus - (right * (width/2.0)) + (newup * (height/2.0));
 
         Camera {
             origin: set.origin,
@@ -81,8 +101,7 @@ impl Camera {
 
     /// Generates a ray a screen space point
     ///
-    /// The point coordinates should be between [0,0] (lower left corner) and [screensize.x,
-    /// screensize.y] (upper right corner)
+    /// The point coordinates should be between [0,1) with (0, 0) being the upper let corner
     ///
     /// Will return a ray and a weight
     ///

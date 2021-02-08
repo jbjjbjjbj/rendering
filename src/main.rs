@@ -1,11 +1,11 @@
-use pathtrace::camera::{Camera, Film, CameraSettings};
-use pathtrace::scene::{Scene, Object};
-use pathtrace::trace::DefaultTracer;
-use pathtrace::scene::shapes::Sphere;
-use pathtrace::core::{Vector2i, Vector3f, Spectrum};
-use pathtrace::render::{RenderContext, RenderTask};
-use pathtrace::sample::UniformSampler;
-use pathtrace::material::{Reflectant, Lambertian};
+use rendering::camera::{Camera, Film, CameraSettings};
+use rendering::scene::{Scene, Object};
+use rendering::trace::DefaultTracer;
+use rendering::scene::shapes::Sphere;
+use rendering::core::{Vector2i, Vector3f, Spectrum};
+use rendering::render::{RenderContext, RenderTask};
+use rendering::sample::UniformSampler;
+use rendering::material::{Reflectant, Lambertian};
 
 use std::rc::Rc;
 
@@ -14,10 +14,12 @@ fn main() {
 
     let cam = Camera::new(&CameraSettings {
         target: Vector3f::new_xyz(0.5, 0.0, -1.0),
-        origin: Vector3f::new_xyz(0.0, 0.0, 0.5),
+        origin: Vector3f::new_xyz(1.7, 0.0, 0.0),
         up: Vector3f::new_xyz(0.0, 1.0, 0.0),
         fov: 90.0, 
-        screensize: res,
+        filmsize: res,
+        focus: None,
+        aperture: 0.5,
     });
 
     let brown = Rc::new(Lambertian::new(Spectrum::new_rgb(0.5, 0.3, 0.0)));
@@ -40,7 +42,7 @@ fn main() {
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);
 
-    let mut task = RenderTask::new(Box::new(tile), 100);
+    let mut task = RenderTask::new(Box::new(tile), 10);
     task.render(&ctx, &mut sampler);
 
     film.commit_tile(&task.tile);

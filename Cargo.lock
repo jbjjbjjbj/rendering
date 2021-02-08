@@ -275,15 +275,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pathtrace"
-version = "0.1.0"
-dependencies = [
- "image",
- "rand",
- "rand_pcg",
-]
-
-[[package]]
 name = "png"
 version = "0.16.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -373,6 +364,15 @@ dependencies = [
  "crossbeam-utils",
  "lazy_static",
  "num_cpus",
+]
+
+[[package]]
+name = "rendering"
+version = "0.1.0"
+dependencies = [
+ "image",
+ "rand",
+ "rand_pcg",
 ]
 
 [[package]]

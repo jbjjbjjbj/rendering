@@ -1,10 +1,12 @@
 use crate::core::{Vector3f, Ray};
+use crate::Float;
 
 /// Returns the context of a intersection
 pub struct Intersection {
     /// Normal vector at intersection
     pub n: Vector3f,
     pub p: Vector3f,
+    pub t: Float,
 }
 
 impl Intersection {

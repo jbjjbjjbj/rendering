@@ -24,8 +24,8 @@ impl PathTracer<'_> {
             return Spectrum::ZERO;
         }
 
-        if let Some((mat, i)) = self.scn.intersect(ray) {
-            if let Some((scalar, nray)) = mat.scatter(ray, &i, sampler) {
+        if let Some(si) = self.scn.intersect(ray) {
+            if let Some((scalar, nray)) = si.mat.scatter(ray, &si.i, sampler) {
                 return self.trace_recur(sampler, &nray, depth-1) * scalar;
             } else {
                 return Spectrum::ZERO;

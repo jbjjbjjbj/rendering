@@ -128,7 +128,7 @@ impl Vector3f {
     /// # Example
     ///
     /// ```
-    /// use pathtrace::core::Vector3f;
+    /// use rendering::core::Vector3f;
     /// let mut v = Vector3f::new_xyz(10.0, 0.0, 0.0);
     /// v.norm_in();
     /// assert!(v.x == 1.0);

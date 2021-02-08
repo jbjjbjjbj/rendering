@@ -44,6 +44,7 @@ impl Hittable for Sphere {
             Some(Intersection {
                 n: self.norm_at(&w),
                 p: w,
+                t: distance,
             })
         }
 
@@ -63,7 +64,7 @@ mod tests {
             direction: Vector3f::new_xyz(0.0, 1.0, 1.5).norm(),
         };
 
-        let dist = sph.intersect(&ray);
-        assert!((dist.unwrap() - 3.28).abs() < 0.01);
+        let dist = sph.intersect(&ray).unwrap();
+        assert!((dist.t - 3.28).abs() < 0.01);
     }
 }

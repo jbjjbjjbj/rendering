@@ -1,5 +1,5 @@
 [package]
-name = "pathtrace"
+name = "rendering"
 version = "0.1.0"
 authors = ["Julian T <julian@jtle.dk>"]
 edition = "2018"

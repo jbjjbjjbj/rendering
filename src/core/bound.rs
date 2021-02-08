@@ -52,7 +52,7 @@ impl<T: Number> Bound2<T> {
     /// # Examples
     ///
     /// ```
-    /// use pathtrace::core::Bound2i;
+    /// use rendering::core::Bound2i;
     /// let b = Bound2i::new_xyxy(2, 2, 6, 7);
     /// let diag = b.diagonal();
     ///
@@ -67,7 +67,7 @@ impl<T: Number> Bound2<T> {
     /// # Examples
     ///
     /// ```
-    /// use pathtrace::core::Bound2i;
+    /// use rendering::core::Bound2i;
     /// let b = Bound2i::new_xyxy(10, 10, 20, 20);
     /// 
     /// assert!(b.area() == 100);
