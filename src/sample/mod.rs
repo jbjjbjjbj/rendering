@@ -29,4 +29,16 @@ pub trait Sampler {
             costheta,
             )
     }
+
+    fn get_in_circle(&mut self) -> Vector2f {
+        let s2d = self.get_sample_2d();
+
+        let d = s2d.x.sqrt();
+        let theta = s2d.y * 2.0 * M_PI;
+
+        Vector2f::new_xy(
+            d * theta.cos(),
+            d * theta.sin(),
+            )
+    }
 }

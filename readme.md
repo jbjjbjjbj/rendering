@@ -19,7 +19,7 @@ I never really finished it before changing to rust.
 
 ## Goals
 
+- [X] Render collection of circles outside, with blurry background
 - [ ] Render [Cornell box](https://en.wikipedia.org/wiki/Cornell_box)
-- [ ] Render collection of circles outside, with blurry background
 - [ ] Render [Utah teapot](https://en.wikipedia.org/wiki/Utah_teapot)
 - [ ] Render [Stanford dragon](https://en.wikipedia.org/wiki/Stanford_dragon)

@@ -33,6 +33,7 @@
 //! ```
 use crate::Float;
 use crate::core::{Vector3f, Vector2f, Vector2i, Ray};
+use crate::sample::Sampler;
 
 /// A simple perspective camera
 pub struct Camera {
@@ -43,6 +44,9 @@ pub struct Camera {
     /// Scaling vectors from screen_origin
     qx: Vector3f,
     qy: Vector3f,
+
+    /// Value for depth of view
+    lens_radius: Option<Float>,
 }
 
 /// Settings for initializing camera
@@ -59,7 +63,9 @@ pub struct CameraSettings {
     /// The film aspect ratio, height / width
     pub filmsize: Vector2i,
     /// The lens aperture
-    pub aperture: Float,
+    ///
+    /// Depth of view is disabled if None
+    pub aperture: Option<Float>,
     /// The distance to the focus plane
     ///
     /// if None it will be set to the distance between origin and target
@@ -96,22 +102,31 @@ impl Camera {
             screen_origin,
             qx,
             qy,
+            lens_radius: set.aperture.map(|a| a / 2.0),
         }
     }
 
     /// Generates a ray a screen space point
     ///
-    /// The point coordinates should be between [0,1) with (0, 0) being the upper let corner
+    /// The point coordinates should be between [0,1) with (0, 0) being the upper left corner
     ///
     /// Will return a ray and a weight
     ///
     /// The direction of the returned way is normalized
-    pub fn generate_ray(&self, point: &Vector2f) -> (Ray, Float) {
-        let mut dir = self.screen_origin + (self.qx * point.x) - (self.qy * point.y);
-        dir.norm_in();
+    pub fn generate_ray(&self, point: &Vector2f, sampler: &mut dyn Sampler) -> (Ray, Float) {
+        // Depth of view origin offset
+        let ooffset = match self.lens_radius {
+            Some(r) => {
+                let rand_dir = sampler.get_in_circle() * r;
+                self.qx * rand_dir.x + self.qy * rand_dir.y
+            },
+            None => Vector3f::ZERO,
+        };
+
+        let dir = self.screen_origin + (self.qx * point.x) - (self.qy * point.y) - ooffset;
 
         (
-            Ray { origin: self.origin, direction: dir },
+            Ray { origin: self.origin + ooffset, direction: dir.norm() },
             1.0
             )
     }

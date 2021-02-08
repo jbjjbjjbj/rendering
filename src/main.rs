@@ -13,18 +13,18 @@ fn main() {
     let res = Vector2i::new_xy(500, 500);
 
     let cam = Camera::new(&CameraSettings {
-        target: Vector3f::new_xyz(0.5, 0.0, -1.0),
-        origin: Vector3f::new_xyz(1.7, 0.0, 0.0),
+        target: Vector3f::new_xyz(0.0, 0.0, -1.0),
+        origin: Vector3f::new_xyz(1.7, 0.0, 0.3),
         up: Vector3f::new_xyz(0.0, 1.0, 0.0),
-        fov: 90.0, 
+        fov: 40.0, 
         filmsize: res,
         focus: None,
-        aperture: 0.5,
+        aperture: Some(20.0),
     });
 
     let brown = Rc::new(Lambertian::new(Spectrum::new_rgb(0.5, 0.3, 0.0)));
     let blue = Rc::new(Lambertian::new(Spectrum::new_rgb(0.0, 0.3, 0.7)));
-    let metal = Rc::new(Reflectant::new(Spectrum::new_rgb(0.75, 0.75, 0.75), Some(0.1)));
+    let metal = Rc::new(Reflectant::new(Spectrum::new_rgb(0.75, 0.75, 0.75), None));
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
@@ -42,7 +42,7 @@ fn main() {
     let mut film = Film::new(res);
     let tile = film.get_tile(&film.frame);
 
-    let mut task = RenderTask::new(Box::new(tile), 10);
+    let mut task = RenderTask::new(Box::new(tile), 100);
     task.render(&ctx, &mut sampler);
 
     film.commit_tile(&task.tile);

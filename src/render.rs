@@ -31,7 +31,7 @@ impl RenderTask {
             let p = corner + sampler.get_sample_2d();
 
             // Create a ray
-            let (r, _) = ctx.cam.generate_ray(&p);
+            let (r, _) = ctx.cam.generate_ray(&p, sampler);
 
             self.tile.add_sample(&p, ctx.trc.trace(sampler, &r));
         }

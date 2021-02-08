@@ -108,6 +108,8 @@ impl<T: Number> fmt::Display for Vector3<T> {
 }
 
 impl Vector3f {
+    pub const ZERO: Self = Vector3f {x: 0.0, y: 0.0, z: 0.0};
+
     /// Calculates the length times itself
     ///
     /// This is faster than using len * len as the square is ommited

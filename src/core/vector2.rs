@@ -2,7 +2,7 @@
 //!
 //! This is implemented generictly with types that fit in the Number trait
 use crate::{Float, Number};
-use std::ops::{Sub, Add};
+use std::ops::{Sub, Add, Mul};
 use std::fmt;
 use std::cmp::min;
 
@@ -41,6 +41,16 @@ impl<T: Number> Add for Vector2<T> {
         Self::new_xy(
             self.x + op.x,
             self.y + op.y,
+        )
+    }
+}
+
+impl<T: Number> Mul<T> for Vector2<T> {
+    type Output = Self;
+    fn mul(self, op: T) -> Self::Output {
+        Self::new_xy(
+            self.x * op,
+            self.y * op,
         )
     }
 }
@@ -91,6 +101,12 @@ impl Vector2i {
             min(self.x, x),
             min(self.y, y),
             )
+    }
+}
+
+impl Vector2f {
+    pub fn len(&self) -> Float {
+        (self.x*self.x + self.y*self.y).sqrt()
     }
 }
 
