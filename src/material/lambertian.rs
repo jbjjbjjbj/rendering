@@ -21,7 +21,7 @@ impl Lambertian {
 }
 
 impl Material for Lambertian {
-    fn scatter(&self, ray: &Ray, i: &Intersection, sampler: &mut dyn Sampler) -> Option<(Spectrum, Ray)> {
+    fn scatter(&self, _: &Ray, i: &Intersection, sampler: &mut dyn Sampler) -> Option<(Spectrum, Ray)> {
         let mut newray = Ray {
             origin: i.p,
             direction: i.n + sampler.get_unit_vector(),

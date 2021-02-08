@@ -1,4 +1,4 @@
-use crate::core::{Ray, Intersection, Hittable};
+use crate::core::{Ray, Intersection};
 use crate::material::Material;
 
 use super::Object;

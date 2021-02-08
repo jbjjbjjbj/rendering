@@ -2,7 +2,6 @@
 //!
 //! Currently only implements RGB colors
 use crate::Float;
-use std::ops;
 
 // TODO implement SampledSpectrum instead for nicer images
 
