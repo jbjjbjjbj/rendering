@@ -3,7 +3,7 @@ use rendering::scene::{Scene, Object};
 use rendering::trace::DefaultTracer;
 use rendering::scene::shapes::Sphere;
 use rendering::core::{Vector2i, Vector3f, Spectrum};
-use rendering::render::{RenderContext, RenderTask};
+use rendering::render::{RenderContext, RenderCoord};
 use rendering::sample::UniformSampler;
 use rendering::material::{Reflectant, Lambertian};
 
@@ -33,19 +33,18 @@ fn main() {
         Object::new(brown.clone(), Box::new(Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0)))),
     ]);
 
-    let tracer = DefaultTracer::new(&scn, None);
+    let tracer = DefaultTracer::new(&scn, Some(50));
 
     let mut sampler = UniformSampler::new();
 
     let ctx = RenderContext { cam: &cam, trc: &tracer };
 
     let mut film = Film::new(res);
-    let tile = film.get_tile(&film.frame);
+    {
+        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(32, 32), 100);
 
-    let mut task = RenderTask::new(Box::new(tile), 100);
-    task.render(&ctx, &mut sampler);
-
-    film.commit_tile(&task.tile);
+        coord.work(&ctx, &mut sampler);
+    }
 
     let image = film.finalize_image();
     if let Err(e) = image.save("test.png") {

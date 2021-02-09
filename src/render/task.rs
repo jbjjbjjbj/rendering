@@ -12,6 +12,7 @@ use crate::Float;
 pub struct RenderTask {
     pub tile: Box<FilmTile>,
     samples: u32,
+    pub tile_index: i32,
 }
 
 pub struct RenderContext<'a> {
@@ -20,8 +21,8 @@ pub struct RenderContext<'a> {
 }
 
 impl RenderTask {
-    pub fn new(tile: Box<FilmTile>, samples: u32) -> Self {
-        Self { tile, samples }
+    pub fn new(tile: Box<FilmTile>, samples: u32, tile_index: i32) -> Self {
+        Self { tile, samples, tile_index }
     }
 
     fn render_at(&mut self, ctx: &RenderContext, x: i32, y: i32, sampler: &mut dyn Sampler) {

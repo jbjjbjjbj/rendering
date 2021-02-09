@@ -14,7 +14,7 @@ pub struct Pixel {
 }
 
 pub struct Film {
-    size: Vector2i,
+    pub size: Vector2i,
     pub frame: Bound2i,
 
     pixels: Vec<Pixel>,

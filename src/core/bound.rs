@@ -45,6 +45,15 @@ impl<T: Number> Bound2<T> {
             )
     }
 
+    /// Finds the intersected area between two bounds
+    pub fn intersect(&self, b: &Bound2<T>) -> Bound2<T> {
+        Bound2::new(
+            &Vector2::new_xy(max(self.min.x, b.min.x), max(self.min.y, b.min.y)),
+            &Vector2::new_xy(min(self.max.x, b.max.x), min(self.max.y, b.max.y)),
+            )
+    }
+
+
     /// Calculates the diagonal vector
     ///
     /// Can be used to calculate the size of the bound
@@ -94,14 +103,6 @@ impl From<&Bound2f> for Bound2i {
             max: core::Vector2i::from(b.max),
         }
     }
-}
-
-/// Finds the intersected area between two bounds
-pub fn intersect<T: Number>(a: &Bound2<T>, b: &Bound2<T>) -> Bound2<T> {
-    Bound2::new(
-        &Vector2::new_xy(max(a.min.x, b.min.x), max(a.min.y, b.min.y)),
-        &Vector2::new_xy(min(a.max.x, b.max.x), min(a.max.y, b.max.y)),
-        )
 }
 
 #[cfg(test)]
