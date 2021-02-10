@@ -32,6 +32,6 @@ impl Material for Lambertian {
             newray.direction = i.n;
         }
 
-        Some((self.color.clone(), newray))
+        Some((self.color, newray))
     }
 }

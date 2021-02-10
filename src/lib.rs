@@ -1,7 +1,7 @@
 pub mod core;
 pub mod camera;
 pub mod render;
-pub mod scene;
+pub mod world;
 pub mod trace;
 pub mod sample;
 pub mod material;

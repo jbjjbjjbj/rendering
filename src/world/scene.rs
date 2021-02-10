@@ -14,9 +14,7 @@ pub struct SceneIntersect<'a> {
 
 impl Scene {
     pub fn new() -> Self {
-        Self {
-            objs: Vec::new(),
-        }
+        Self::default()
     }
 
     pub fn add_object(&mut self, obj: Object) {
@@ -45,3 +43,10 @@ impl Scene {
     }
 }
 
+impl Default for Scene {
+    fn default() -> Self {
+        Self {
+            objs: Vec::new(),
+        }
+    }
+}

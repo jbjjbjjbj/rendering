@@ -117,7 +117,7 @@ impl Vector3f {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
-    pub fn len(&self) -> Float {
+    pub fn length(&self) -> Float {
         self.len_squared().sqrt()
     }
 
@@ -137,7 +137,7 @@ impl Vector3f {
     /// ```
     pub fn norm_in(&mut self) {
         // TODO Experiment with checking for normality with len_squared
-        let len = self.len();
+        let len = self.length();
         if len == 0.0 {
             *self = Self::new(0.0);
         }
@@ -146,7 +146,7 @@ impl Vector3f {
     }
 
     pub fn norm(&self) -> Self {
-        let mut new = self.clone();
+        let mut new = *self;
         new.norm_in();
         new
     }

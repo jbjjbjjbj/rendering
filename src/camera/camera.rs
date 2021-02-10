@@ -79,7 +79,7 @@ impl Camera {
         // Calculate translation vectors
         let mut forward = set.target - set.origin;
 
-        let focus = set.focus.unwrap_or(forward.len());
+        let focus = set.focus.unwrap_or_else(|| forward.length());
 
         forward.norm_in();
 

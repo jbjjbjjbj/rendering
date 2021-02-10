@@ -13,6 +13,12 @@ pub struct UniformSampler {
 
 impl UniformSampler {
     pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl Default for UniformSampler {
+    fn default() -> Self {
         Self {
             r: Pcg32::seed_from_u64(1),
             d: Uniform::new(0.0, 1.0),
@@ -22,7 +28,6 @@ impl UniformSampler {
 
 impl Sampler for UniformSampler {
     fn get_sample(&mut self) -> Float {
-        let sample = self.d.sample(&mut self.r);
-        sample
+        self.d.sample(&mut self.r)
     }
 }

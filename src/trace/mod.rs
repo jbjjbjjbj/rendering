@@ -1,4 +1,4 @@
-use crate::scene::Scene;
+use crate::world::Scene;
 use crate::core::{Spectrum, Ray, Vector3f};
 use crate::sample::Sampler;
 

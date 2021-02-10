@@ -112,7 +112,7 @@ impl Vector2i {
 }
 
 impl Vector2f {
-    pub fn len(&self) -> Float {
+    pub fn length(&self) -> Float {
         (self.x*self.x + self.y*self.y).sqrt()
     }
 

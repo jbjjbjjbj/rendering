@@ -1,7 +1,6 @@
 use rendering::camera::{Camera, Film, CameraSettings};
-use rendering::scene::{Scene, Object};
+use rendering::world::{Scene, Object, shapes::Sphere};
 use rendering::trace::DefaultTracer;
-use rendering::scene::shapes::Sphere;
 use rendering::core::{Vector2i, Vector3f, Spectrum};
 use rendering::render::{RenderContext, RenderCoord};
 use rendering::sample::UniformSampler;
@@ -28,9 +27,9 @@ fn main() {
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
-        Object::new(metal.clone(), Box::new(Sphere::new(0.5, Vector3f::new_xyz(0.0, 0.0, -1.0)))),
-        Object::new(blue.clone(), Box::new(Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.0)))),
-        Object::new(brown.clone(), Box::new(Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0)))),
+        Object::new(metal, Box::new(Sphere::new(0.5, Vector3f::new_xyz(0.0, 0.0, -1.0)))),
+        Object::new(blue, Box::new(Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.0)))),
+        Object::new(brown, Box::new(Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0)))),
     ]);
 
     let tracer = DefaultTracer::new(&scn, Some(50));

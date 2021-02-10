@@ -34,7 +34,7 @@ impl Hittable for Sphere {
         let disc = half_b*half_b - a*c;
 
         if disc < 0.0 {
-            return None
+            None
         } else {
             let distance = (-half_b - disc.sqrt()) / a;
             if distance < 0.0 {

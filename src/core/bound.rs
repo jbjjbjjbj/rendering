@@ -83,7 +83,7 @@ impl<T: Number> Bound2<T> {
     /// ```
     pub fn area(&self) -> T {
         let diag = self.diagonal();
-        return diag.x * diag.y;
+        diag.x * diag.y
     }
 }
 
