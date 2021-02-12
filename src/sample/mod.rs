@@ -16,6 +16,8 @@ pub trait Sampler {
         Vector2f::new_xy(self.get_sample(), self.get_sample())
     }
 
+    fn clone_and_seed(&mut self) -> Box<dyn Sampler + Send>;
+
     fn get_unit_vector(&mut self) -> Vector3f {
         let s2d = self.get_sample_2d();
 

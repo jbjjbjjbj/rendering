@@ -6,7 +6,7 @@ use rendering::render::{RenderContext, RenderCoord};
 use rendering::sample::UniformSampler;
 use rendering::material::{Reflectant, Lambertian};
 
-use std::rc::Rc;
+use std::sync::Arc;
 
 fn main() {
     let res = Vector2i::new_xy(500, 500);
@@ -21,9 +21,9 @@ fn main() {
         aperture: Some(20.0),
     });
 
-    let brown = Rc::new(Lambertian::new(Spectrum::new_rgb(0.5, 0.3, 0.0)));
-    let blue = Rc::new(Lambertian::new(Spectrum::new_rgb(0.0, 0.3, 0.7)));
-    let metal = Rc::new(Reflectant::new(Spectrum::new_rgb(0.75, 0.75, 0.75), None));
+    let brown = Arc::new(Lambertian::new(Spectrum::new_rgb(0.5, 0.3, 0.0)));
+    let blue = Arc::new(Lambertian::new(Spectrum::new_rgb(0.0, 0.3, 0.7)));
+    let metal = Arc::new(Reflectant::new(Spectrum::new_rgb(0.75, 0.75, 0.75), None));
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
@@ -40,9 +40,9 @@ fn main() {
 
     let mut film = Film::new(res);
     {
-        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(32, 32), 100);
+        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(32, 32), 300);
 
-        coord.work(&ctx, &mut sampler);
+        coord.run_threaded(&ctx, &mut sampler, 8);
     }
 
     let image = film.finalize_image();

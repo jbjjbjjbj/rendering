@@ -30,4 +30,10 @@ impl Sampler for UniformSampler {
     fn get_sample(&mut self) -> Float {
         self.d.sample(&mut self.r)
     }
+
+    fn clone_and_seed(&mut self) -> Box<dyn Sampler + Send> {
+        let mut n = self.clone();
+        n.r = Pcg32::seed_from_u64(self.r.next_u64());
+        Box::new(n)
+    }
 }

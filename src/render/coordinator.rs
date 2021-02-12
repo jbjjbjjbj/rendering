@@ -7,7 +7,8 @@ use crate::camera::Film;
 use crate::core::{Bound2i, Vector2i};
 use crate::sample::Sampler;
 
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
+use std::thread;
 
 struct Tiler {
     tilesize: Vector2i,
@@ -111,5 +112,16 @@ impl<'a> RenderCoord<'a> {
             task.render(ctx, sampler);
             self.finish_task(&task);
         }
+    }
+
+    pub fn run_threaded(&self, ctx: &RenderContext, sampler: &mut (dyn Sampler + Send), threads: u32) {
+        crossbeam::scope(|scope| {
+            for _ in 0..threads {
+                let mut sampler = sampler.clone_and_seed();
+                scope.spawn(move |_| {
+                    self.work(ctx, sampler.as_mut());
+                });
+            }
+        }).unwrap();
     }
 }
