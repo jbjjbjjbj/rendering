@@ -128,7 +128,7 @@ mod tests {
         let b1 = Bound2i::new_xyxy(10, 10, 20, 20);
         let b2 = Bound2i::new_xyxy(2, 11, 22, 17);
 
-        let b = intersect(&b1, &b2);
+        let b = b1.intersect(&b2);
 
         assert!(
             b.min.x == 10 &&

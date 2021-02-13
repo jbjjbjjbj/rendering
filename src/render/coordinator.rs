@@ -7,8 +7,7 @@ use crate::camera::Film;
 use crate::core::{Bound2i, Vector2i};
 use crate::sample::Sampler;
 
-use std::sync::{Arc, Mutex};
-use std::thread;
+use std::sync::{Mutex};
 
 struct Tiler {
     tilesize: Vector2i,

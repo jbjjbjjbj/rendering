@@ -42,7 +42,7 @@ fn main() {
     {
         let coord = RenderCoord::new(&mut film, Vector2i::new_xy(32, 32), 300);
 
-        coord.run_threaded(&ctx, &mut sampler, 8);
+        coord.run_threaded(&ctx, &mut sampler, 4);
     }
 
     let image = film.finalize_image();

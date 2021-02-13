@@ -8,6 +8,7 @@
 //! ```
 //! use rendering::camera::{CameraSettings, Camera};
 //! use rendering::core::{Vector3f, Vector2f, Vector2i};
+//! use rendering::sample::UniformSampler;
 //!
 //! let set = CameraSettings {
 //!     origin: Vector3f::new(10.0),
@@ -16,12 +17,13 @@
 //!     fov: 90.0, 
 //!     filmsize: Vector2i::new(10),
 //!     focus: None,
-//!     aperture: 0.0,
+//!     aperture: None,
 //! };
 //!
 //! let cam = Camera::new(&set);
+//! let mut sampler = UniformSampler::new();
 //!
-//! let (r, _) = cam.generate_ray(&Vector2f::new(5.0));
+//! let (r, _) = cam.generate_ray(&Vector2f::new(5.0), &mut sampler);
 //! let dir = r.direction;
 //!
 //! assert!(
