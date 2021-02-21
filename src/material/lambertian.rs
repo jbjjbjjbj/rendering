@@ -1,5 +1,6 @@
 use super::Material;
-use crate::core::{Intersection, Ray, Spectrum};
+use crate::core::{Ray, Spectrum};
+use crate::world::Intersection;
 use crate::sample::Sampler;
 
 use std::rc::Rc;

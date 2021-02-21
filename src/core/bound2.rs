@@ -1,7 +1,8 @@
-//! Implements a 2d region
+//! Implements a 2d axis aligned bounding box
 use crate::{Number, Float};
 use super::vector2::Vector2;
 use crate::core;
+use crate::core::{min, max};
 
 /// Implements a region between min and max
 #[derive(Clone)]
@@ -12,20 +13,6 @@ pub struct Bound2<T: Number> {
 
 pub type Bound2i = Bound2<i32>;
 pub type Bound2f = Bound2<Float>;
-
-fn min<T: Number> (a: T, b: T) -> T {
-    if b < a {
-        return b;
-    }
-    a
-}
-
-fn max<T: Number> (a: T, b: T) -> T {
-    if b > a {
-        return b;
-    }
-    a
-}
 
 impl<T: Number> Bound2<T> {
     /// Creates a new bound from two points

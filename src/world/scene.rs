@@ -1,15 +1,9 @@
-use crate::core::{Ray, Intersection};
-use crate::material::Material;
+use crate::core::Ray;
 
-use super::Object;
+use super::{Object, HittableList, Hittable, Intersection};
 
 pub struct Scene {
-    objs: Vec<Object>,
-}
-
-pub struct SceneIntersect<'a> {
-    pub mat: &'a dyn Material,
-    pub i: Intersection,
+    content: HittableList,
 }
 
 impl Scene {
@@ -18,7 +12,7 @@ impl Scene {
     }
 
     pub fn add_object(&mut self, obj: Object) {
-        self.objs.push(obj);
+        self.content.add(Box::new(obj));
     }
 
     pub fn add_objects(&mut self, objs: Vec<Object>) {
@@ -26,27 +20,18 @@ impl Scene {
             self.add_object(obj);
         }
     }
+}
 
-    pub fn intersect(&self, ray: &Ray) -> Option<SceneIntersect> {
-        let mut min: Option<SceneIntersect> = None;
-
-        for obj in self.objs.iter() {
-            if let Some(i) = obj.shape.intersect(&ray) {
-                match min {
-                    Some(ref si) if si.i.t < i.t => (),
-                    _ => min = Some(SceneIntersect {i, mat: obj.mat.as_ref() }),
-                }
-            }
-        }
-
-        min
+impl Hittable for Scene {
+    fn intersect(&self, ray: &Ray) -> Option<Intersection> {
+        self.content.intersect(ray)
     }
 }
 
 impl Default for Scene {
     fn default() -> Self {
         Self {
-            objs: Vec::new(),
+            content: HittableList::new(),
         }
     }
 }

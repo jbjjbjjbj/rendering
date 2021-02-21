@@ -1,4 +1,4 @@
-use crate::world::Scene;
+use crate::world::{Hittable, Scene};
 use crate::core::{Spectrum, Ray, Vector3f};
 use crate::sample::Sampler;
 
@@ -30,8 +30,8 @@ impl NormTracer<'_> {
 impl Tracer for NormTracer<'_> {
     fn trace(&self, _: &mut dyn Sampler, ray: &Ray) -> Spectrum {
         // Trace ray, we dont care about material
-        if let Some(si) = self.scn.intersect(ray) {
-            let norm = si.i.n * 0.5 + Vector3f::new(0.5);
+        if let Some(i) = self.scn.intersect(ray) {
+            let norm = i.n * 0.5 + Vector3f::new(0.5);
 
             return Spectrum::new_rgb(norm.x, norm.y, norm.z);
         }

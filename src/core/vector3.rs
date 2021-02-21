@@ -2,7 +2,7 @@
 //!
 //! Also add more 3d math things needed for shading and 3d calculations.
 use crate::{Float, Number, NEAR_ZERO};
-use std::ops::{Mul, Sub, Add, DivAssign, Neg, AddAssign};
+use std::ops::{Mul, Sub, Add, DivAssign, Neg, AddAssign, Index};
 use std::fmt;
 
 #[derive(Clone, Copy)]
@@ -104,6 +104,20 @@ impl<T: Number> DivAssign<T> for Vector3<T> {
 impl<T: Number> fmt::Display for Vector3<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.write_fmt(format_args!("[{}, {}, {}]", self.x, self.y, self.z))
+    }
+}
+
+// Ohh god
+impl<T: Number> Index<u32> for Vector3<T> {
+    type Output = T;
+
+    fn index(&self, i: u32) -> &Self::Output {
+        match i {
+            0 => &self.x,
+            1 => &self.y,
+            2 => &self.z,
+            _ => panic!("index out of bounds: index {} is not possible with 3d vector", i)
+        }
     }
 }
 

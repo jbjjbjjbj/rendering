@@ -2,7 +2,8 @@
 //!
 //! Spheres are relatively easy to calculate intersections between
 use crate::Float;
-use crate::core::{Ray, Vector3f, Hittable, Intersection};
+use crate::core::{Ray, Vector3f, Bound3f};
+use crate::world::{Hittable, Intersection};
 
 pub struct Sphere {
     radius: Float,
@@ -45,9 +46,30 @@ impl Hittable for Sphere {
                 n: self.norm_at(&w),
                 p: w,
                 t: distance,
+                m: None,
             })
         }
 
+    }
+
+    /// Box containing the circle
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use rendering::core::{Vector3f, Hittable};
+    /// use rendering::world::shapes::Sphere;
+    ///
+    /// let sph = Sphere::new(1.0, Vector3f::new(0.0));
+    /// let b = sph.bounding_box().unwrap();
+    ///
+    /// assert!(b.min.x == -1.0 && b.min.y == -1.0 && b.min.z == -1.0);
+    /// assert!(b.max.x == 1.0 && b.max.y == 1.0 && b.max.z == 1.0);
+    fn bounding_box(&self) -> Option<Bound3f> {
+        let offset = Vector3f::new(self.radius);
+        Some(
+            Bound3f::new(self.center - offset, self.center + offset)
+            )
     }
 }
 

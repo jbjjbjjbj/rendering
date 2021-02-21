@@ -1,11 +1,13 @@
-use crate::world::Scene;
+use crate::world::{Hittable, Scene};
 use crate::core::{Ray, Spectrum};
 use crate::sample::Sampler;
+use crate::material::{Lambertian, Material};
 use super::Tracer;
 
 pub struct PathTracer<'a> {
     depth: i32,
     scn: &'a Scene,
+    default_mat: Box<dyn Material>,
 }
 
 impl PathTracer<'_> {
@@ -15,6 +17,7 @@ impl PathTracer<'_> {
         PathTracer {
             depth,
             scn,
+            default_mat: Box::new(Lambertian::new(Spectrum::ZERO)),
         }
     }
 
@@ -24,8 +27,8 @@ impl PathTracer<'_> {
             return Spectrum::ZERO;
         }
 
-        if let Some(si) = self.scn.intersect(ray) {
-            if let Some((scalar, nray)) = si.mat.scatter(ray, &si.i, sampler) {
+        if let Some(i) = self.scn.intersect(ray) {
+            if let Some((scalar, nray)) = i.m.unwrap_or(self.default_mat.as_ref()).scatter(ray, &i, sampler) {
                 return self.trace_recur(sampler, &nray, depth-1) * scalar;
             } else {
                 return Spectrum::ZERO;

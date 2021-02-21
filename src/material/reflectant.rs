@@ -1,5 +1,6 @@
 use crate::Float;
-use crate::core::{Ray, Intersection, Spectrum, Vector3f};
+use crate::core::{Ray, Spectrum, Vector3f};
+use crate::world::Intersection;
 use super::Material;
 use crate::sample::Sampler;
 
