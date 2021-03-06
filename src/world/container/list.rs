@@ -1,5 +1,6 @@
-use super::{Hittable, Intersection};
-use crate::core::Ray;
+use crate::world::{Hittable, Intersection};
+use crate::core::{Bound3f, Ray};
+
 
 pub struct HittableList {
     elems: Vec<Box<dyn Hittable>>,
@@ -32,6 +33,17 @@ impl Hittable for HittableList {
 
         min
     }
+
+    fn bounding_box(&self) -> Bound3f {
+        let mut bound: Bound3f = Bound3f::EMPTY;
+
+        for e in self.elems.iter() {
+            let eb = e.bounding_box();
+            bound = bound.combine(&eb);
+        }
+
+        bound
+    }
 }
 
 impl Default for HittableList {
@@ -41,3 +53,4 @@ impl Default for HittableList {
         }
     }
 }
+

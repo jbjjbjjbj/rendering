@@ -2,11 +2,10 @@
 pub mod shapes;
 
 mod scene;
-mod container;
+pub mod container;
 mod hittable;
 pub use scene::*;
 pub use hittable::{Intersection, Hittable};
-pub use container::HittableList;
 
 use std::sync::Arc;
 use crate::material::Material;
@@ -31,7 +30,7 @@ impl Hittable for Object {
         self.shape.intersect(ray).map(|mut i| {i.m = Some(self.mat.as_ref()); i})
     }
 
-    fn bounding_box(&self) -> Option<Bound3f> {
+    fn bounding_box(&self) -> Bound3f {
         self.shape.bounding_box()
     }
 }

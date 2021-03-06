@@ -1,9 +1,11 @@
-use crate::core::Ray;
+use crate::core::{Bound3f, Ray};
 
-use super::{Object, HittableList, Hittable, Intersection};
+use super::{Object, container, Hittable, Intersection};
+
+type Container = container::HittableList;
 
 pub struct Scene {
-    content: HittableList,
+    content: Container,
 }
 
 impl Scene {
@@ -26,12 +28,16 @@ impl Hittable for Scene {
     fn intersect(&self, ray: &Ray) -> Option<Intersection> {
         self.content.intersect(ray)
     }
+
+    fn bounding_box(&self) -> Bound3f {
+        self.content.bounding_box()
+    }
 }
 
 impl Default for Scene {
     fn default() -> Self {
         Self {
-            content: HittableList::new(),
+            content: Container::new(),
         }
     }
 }

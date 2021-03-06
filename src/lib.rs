@@ -38,3 +38,4 @@ pub type Float = f64;
 
 pub const M_PI: Float = PI;
 pub const NEAR_ZERO: Float = 1e-8;
+pub const INFTY: Float = f64::INFINITY;

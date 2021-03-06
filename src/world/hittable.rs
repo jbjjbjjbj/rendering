@@ -27,7 +27,5 @@ pub trait Hittable: Sync + Send {
     fn intersect(&self, ray: &Ray) -> Option<Intersection>;
 
     /// Returns the axis alligned bounding box containing self
-    fn bounding_box(&self) -> Option<Bound3f> {
-        None
-    }
+    fn bounding_box(&self) -> Bound3f;
 }

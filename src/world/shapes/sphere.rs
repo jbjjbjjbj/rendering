@@ -57,19 +57,18 @@ impl Hittable for Sphere {
     /// # Examples
     ///
     /// ```
-    /// use rendering::core::{Vector3f, Hittable};
-    /// use rendering::world::shapes::Sphere;
+    /// use rendering::core::Vector3f;
+    /// use rendering::world::{Hittable, shapes::Sphere};
     ///
     /// let sph = Sphere::new(1.0, Vector3f::new(0.0));
-    /// let b = sph.bounding_box().unwrap();
+    /// let b = sph.bounding_box();
     ///
     /// assert!(b.min.x == -1.0 && b.min.y == -1.0 && b.min.z == -1.0);
     /// assert!(b.max.x == 1.0 && b.max.y == 1.0 && b.max.z == 1.0);
-    fn bounding_box(&self) -> Option<Bound3f> {
+    fn bounding_box(&self) -> Bound3f {
         let offset = Vector3f::new(self.radius);
-        Some(
-            Bound3f::new(self.center - offset, self.center + offset)
-            )
+
+        Bound3f::new(self.center - offset, self.center + offset)
     }
 }
 
