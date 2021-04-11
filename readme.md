@@ -9,7 +9,7 @@ This rust version is my third implementation, the previous being:
 - [Raytracing in c](https://git.jtle.dk/raytrace/about/)
     This is the one which gives the best results,
     however as my ambitions for the project grew as did my requirement for more language features.
-- [Pathtracing in rust](https://github.com/jbjjbjjbj/rendering/tree/old_master)
+- [Pathtracing in c++](https://github.com/jbjjbjjbj/rendering/tree/old_master)
 I never really finished it before changing to rust.
     However it had a really cool qt gui, updating as samples were added.
 
