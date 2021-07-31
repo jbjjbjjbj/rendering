@@ -42,12 +42,12 @@ impl Hittable for Sphere {
                 return None
             }
             let w = ray.at(distance);
-            Some(Intersection {
-                n: self.norm_at(&w),
-                p: w,
-                t: distance,
-                m: None,
-            })
+            Some(Intersection::new(
+                    self.norm_at(&w),
+                    w,
+                    ray,
+                    distance,
+                    ))
         }
 
     }

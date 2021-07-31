@@ -27,7 +27,12 @@ impl Object {
 
 impl Hittable for Object {
     fn intersect(&self, ray: &Ray) -> Option<Intersection> {
-        self.shape.intersect(ray).map(|mut i| {i.m = Some(self.mat.as_ref()); i})
+        if let Some(mut inter) = self.shape.intersect(ray) {
+            inter.add_material_if_none(self.mat.as_ref());
+           Some(inter)
+        } else {
+            None
+        }
     }
 
     fn bounding_box(&self) -> Bound3f {

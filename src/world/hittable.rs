@@ -7,16 +7,26 @@ pub struct Intersection<'a> {
     /// Normal vector at intersection
     pub n: Vector3f,
     pub p: Vector3f,
+    pub front: bool,
     pub t: Float,
     pub m: Option<&'a dyn Material>,
 }
 
-impl Intersection<'_> {
-    pub fn norm_against_ray(&self, r: &Ray) -> Vector3f {
-        if self.n.dot(&r.direction) < 0.0 {
-            self.n
-        } else {
-            -self.n
+impl<'a> Intersection<'a> {
+    pub fn new(out_normal: Vector3f, point: Vector3f, ray: &Ray, t: Float) -> Self {
+        let front = ray.direction.dot(&out_normal) < 0.0;
+        Intersection {
+            n: { if front { out_normal } else { -out_normal } },
+            front,
+            p: point,
+            m: None,
+            t,
+        }
+    }
+
+    pub fn add_material_if_none(&mut self, mat: &'a dyn Material) {
+        if let None = self.m {
+            self.m = Some(mat);
         }
     }
 }
