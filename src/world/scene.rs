@@ -14,7 +14,7 @@ impl Scene {
     }
 
     pub fn add_object(&mut self, obj: Object) {
-        self.content.add(Box::new(obj));
+        self.content.add(obj);
     }
 
     pub fn add_objects(&mut self, objs: Vec<Object>) {

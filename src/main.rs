@@ -28,10 +28,10 @@ fn main() {
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
-        Object::new(metal, Box::new(Sphere::new(0.2, Vector3f::new_xyz(0.0, 0.0, -1.0)))),
-        Object::new(blue, Box::new(Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.0)))),
-        Object::new(brown, Box::new(Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0)))),
-        Object::new(sun, Box::new(Sphere::new(0.4, Vector3f::new_xyz(-1.0, 0.7, 0.0)))),
+        Object::new(metal, Sphere::new(0.2, Vector3f::new_xyz(0.0, 0.0, -1.0))),
+        Object::new(blue, Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.0))),
+        Object::new(brown, Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0))),
+        Object::new(sun, Sphere::new(0.4, Vector3f::new_xyz(-1.0, 0.7, 0.0))),
     ]);
 
     let tracer = DefaultTracer::new(&scn, Some(50), 

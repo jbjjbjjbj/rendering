@@ -1,9 +1,9 @@
-use crate::world::{Hittable, Intersection};
+use crate::world::{Object, Hittable, Intersection};
 use crate::core::{Bound3f, Ray};
 
 
 pub struct HittableList {
-    elems: Vec<Box<dyn Hittable>>,
+    elems: Vec<Object>,
 }
 
 impl HittableList {
@@ -11,7 +11,7 @@ impl HittableList {
         Self::default()
     }
 
-    pub fn add(&mut self, h: Box<dyn Hittable>) {
+    pub fn add(&mut self, h: Object) {
         self.elems.push(h);
     }
 }
