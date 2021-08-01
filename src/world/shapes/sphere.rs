@@ -1,7 +1,7 @@
 //! Implements sphere
 //!
 //! Spheres are relatively easy to calculate intersections between
-use crate::Float;
+use crate::{Float, NEAR_ZERO};
 use crate::core::{Ray, Vector3f, Bound3f};
 use crate::world::{Hittable, Intersection};
 
@@ -37,10 +37,17 @@ impl Hittable for Sphere {
         if disc < 0.0 {
             None
         } else {
-            let distance = (-half_b - disc.sqrt()) / a;
-            if distance < 0.0 {
-                return None
+            let disc_sqrt = disc.sqrt();
+
+            let mut distance = -half_b - disc_sqrt;
+            if distance <= NEAR_ZERO {
+                distance = -half_b + disc_sqrt;
             }
+            if distance <= NEAR_ZERO {
+                return None;
+            }
+
+            distance /= a;
             let w = ray.at(distance);
             Some(Intersection::new(
                     self.norm_at(&w),

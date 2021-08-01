@@ -18,14 +18,14 @@ pub use ray::Ray;
 
 use crate::Number;
 
-fn min<T: Number> (a: T, b: T) -> T {
+pub fn min<T: Number> (a: T, b: T) -> T {
     if b < a {
         return b;
     }
     a
 }
 
-fn max<T: Number> (a: T, b: T) -> T {
+pub fn max<T: Number> (a: T, b: T) -> T {
     if b > a {
         return b;
     }

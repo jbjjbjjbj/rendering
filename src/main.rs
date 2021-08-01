@@ -13,23 +13,26 @@ fn main() {
 
     let cam = Camera::new(&CameraSettings {
         target: Vector3f::new_xyz(0.0, 0.0, -1.0),
-        origin: Vector3f::new_xyz(1.7, 0.0, 0.3),
+        origin: Vector3f::new_xyz(0.0, 0.0, 1.0),
         up: Vector3f::new_xyz(0.0, 1.0, 0.0),
-        fov: 60.0, 
+        fov: 45.0, 
         filmsize: res,
         focus: None,
-        aperture: Some(20.0),
+        aperture: Some(10.0),
+        //aperture: None,
     });
 
     let brown = Arc::new(Lambertian::new(Spectrum::new_rgb(0.5, 0.3, 0.0)));
     let blue = Arc::new(Lambertian::new(Spectrum::new_rgb(0.0, 0.3, 0.7)));
-    let metal = Arc::new(Reflectant::new(Spectrum::new_rgb(0.8, 0.8, 0.9), Some(1.0)));
+    let green = Arc::new(Lambertian::new(Spectrum::new_rgb(0.0, 0.7, 0.3)));
+    let metal = Arc::new(Dielectric::new(1.5));
     let sun = Arc::new(DiffuseLight::new_white(13.0));
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
         Object::new(metal, Sphere::new(0.2, Vector3f::new_xyz(0.0, 0.0, -1.0))),
-        Object::new(blue, Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.0))),
+        Object::new(blue.clone(), Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.5))),
+        Object::new(green, Sphere::new(0.3, Vector3f::new_xyz(0.5, 0.0, -2.5))),
         Object::new(brown, Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0))),
         Object::new(sun, Sphere::new(0.4, Vector3f::new_xyz(-1.0, 0.7, 0.0))),
     ]);
@@ -45,7 +48,7 @@ fn main() {
 
     let mut film = Film::new(res);
     {
-        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(64, 64), 400);
+        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(64, 64), 50);
 
         coord.run_threaded(&ctx, &mut sampler, 8);
     }
