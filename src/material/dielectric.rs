@@ -3,13 +3,10 @@ use crate::core::{min, Vector3f, Spectrum, Ray};
 use crate::world::Intersection;
 use crate::sample::Sampler;
 use crate::Float;
+use crate::material::reflectant::reflect;
 
 pub struct Dielectric {
     ratio: Float,
-}
-
-fn reflect(v: Vector3f, n: Vector3f) -> Vector3f {
-    v - n * (2.0 * v.dot(&n))
 }
 
 // Implementation from RTIOW

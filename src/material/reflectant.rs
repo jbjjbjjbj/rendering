@@ -18,14 +18,14 @@ impl Reflectant {
     }
 }
 
-fn reflect(v: &Vector3f, n: &Vector3f) -> Vector3f {
-    *v - *n * (2.0 * v.dot(n))
+pub fn reflect(v: Vector3f, n: Vector3f) -> Vector3f {
+    v - n * (2.0 * v.dot(&n))
 }
 
 impl Material for Reflectant {
     fn scatter(&self, ray: &Ray, i: &Intersection, sampler: &mut dyn Sampler) -> Option<(Spectrum, Ray)> {
         // Find reflectance vector
-        let mut reflected = reflect(&ray.direction, &i.n);
+        let mut reflected = reflect(ray.direction, i.n);
         if let Some(fuzz) = self.fuzz {
             reflected += &(sampler.get_unit_vector() * fuzz);
         }
