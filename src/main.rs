@@ -50,7 +50,7 @@ fn main() {
 
     let mut film = Film::new(res);
     {
-        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(50, 50), 1000);
+        let coord = RenderCoord::new(&mut film, Vector2i::new_xy(50, 50), 16000);
 
         coord.run_threaded(&ctx, &mut sampler, 8);
     }
