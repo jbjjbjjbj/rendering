@@ -3,7 +3,7 @@
 //! Spheres are relatively easy to calculate intersections between
 use crate::{Float, NEAR_ZERO};
 use crate::core::{Ray, Vector3f, Bound3f};
-use crate::world::{Hittable, Intersection};
+use crate::world::{Hittable, DynHittable, Intersection};
 
 pub struct Sphere {
     radius: Float,
@@ -76,6 +76,12 @@ impl Hittable for Sphere {
         let offset = Vector3f::new(self.radius);
 
         Bound3f::new(self.center - offset, self.center + offset)
+    }
+}
+
+impl Into<DynHittable> for Sphere {
+    fn into(self) -> DynHittable {
+        DynHittable::new(Box::new(self))
     }
 }
 

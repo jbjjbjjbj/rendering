@@ -2,6 +2,8 @@ use crate::core::{Vector3f, Bound3f, Ray};
 use crate::Float;
 use crate::material::Material;
 
+use std::ops::Deref;
+
 /// Returns the context of a intersection
 pub struct Intersection<'a> {
     /// Normal vector at intersection
@@ -38,4 +40,20 @@ pub trait Hittable: Sync + Send {
 
     /// Returns the axis alligned bounding box containing self
     fn bounding_box(&self) -> Bound3f;
+}
+
+pub struct DynHittable(Box<dyn Hittable>);
+
+impl DynHittable {
+    pub fn new(hit: Box<dyn Hittable>) -> Self {
+        Self (hit)
+    }
+}
+
+impl Deref for DynHittable {
+    type Target = dyn Hittable;
+
+    fn deref(&self) -> &Self::Target {
+        self.0.as_ref()
+    }
 }

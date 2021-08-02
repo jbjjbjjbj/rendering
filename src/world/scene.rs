@@ -1,5 +1,7 @@
 use crate::core::{Bound3f, Ray};
 
+use std::iter::IntoIterator;
+
 use super::{Object, container, Hittable, Intersection};
 
 type Container = container::HittableList;
@@ -17,8 +19,11 @@ impl Scene {
         self.content.add(obj);
     }
 
-    pub fn add_objects(&mut self, objs: Vec<Object>) {
-        for obj in objs {
+    pub fn add_objects<T>(&mut self, objs: T) 
+    where
+        T: IntoIterator<Item = Object>,
+    {
+        for obj in objs.into_iter() {
             self.add_object(obj);
         }
     }
