@@ -1,6 +1,7 @@
 use crate::core::{Vector3f, Bound3f, Ray};
 use crate::Float;
 use crate::material::Material;
+use crate::world::Instancable;
 
 use std::ops::Deref;
 
@@ -57,3 +58,5 @@ impl Deref for DynHittable {
         self.0.as_ref()
     }
 }
+
+impl Instancable for DynHittable {}

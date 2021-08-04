@@ -2,7 +2,7 @@
 //!
 //! Also add more 3d math things needed for shading and 3d calculations.
 use crate::{Float, Number, NEAR_ZERO};
-use std::ops::{Mul, Sub, Add, DivAssign, Neg, AddAssign, Index};
+use std::ops::{Mul, Sub, Add, Div, DivAssign, Neg, AddAssign, Index};
 use std::fmt;
 
 #[derive(Clone, Copy)]
@@ -69,6 +69,17 @@ impl<T: Number> Mul<T> for Vector3<T> {
             self.x * op,
             self.y * op,
             self.z * op,
+            )
+    }
+}
+
+impl<T: Number> Div<T> for Vector3<T> {
+    type Output = Self;
+    fn div(self, op: T) -> Self::Output {
+        Self::Output::new_xyz(
+            self.x / op,
+            self.y / op,
+            self.z / op,
             )
     }
 }

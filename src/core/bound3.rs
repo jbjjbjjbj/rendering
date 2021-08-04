@@ -64,6 +64,13 @@ impl<T: Number> Bound3<T> {
         let diag = self.max - self.min;
         diag.x * diag.y * diag.z
     }
+
+    pub fn offset(&self, offset: Vector3<T>) -> Self {
+        Self {
+            min: self.min + offset,
+            max: self.max + offset,
+        }
+    }
 }
 
 impl Bound3f {
@@ -86,7 +93,6 @@ impl Bound3f {
     /// assert!(!b.intersect(&r3, 0.0, INFTY));
     /// ```
     pub fn intersect(&self, ray: &Ray, t_min: Float, t_max: Float) -> bool {
-        println!("BIN: {} -> {}", self.min, self.max);
         // Method stolen from Ray tracing the next week.
         // They mention its from pixar
         for i in 0..3 {

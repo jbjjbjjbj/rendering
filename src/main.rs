@@ -1,5 +1,5 @@
 use rendering::camera::{Camera, Film, CameraSettings};
-use rendering::world::{Scene, Object, shapes::Sphere};
+use rendering::world::{Scene, Object, shapes::Sphere, Instancable};
 use rendering::trace::DefaultTracer;
 use rendering::core::{Vector2i, Vector3f, Spectrum};
 use rendering::render::{RenderContext, RenderCoord};
@@ -31,12 +31,12 @@ fn main() {
 
     let mut scn = Scene::new();
     scn.add_objects(vec![
-        Object::new(glass, Sphere::new(0.2, Vector3f::new_xyz(0.0, 0.0, -1.0))),
-        Object::new(blue, Sphere::new(0.5, Vector3f::new_xyz(1.0, 0.0, -1.5))),
-        Object::new(green, Sphere::new(0.3, Vector3f::new_xyz(0.5, 0.0, -2.5))),
-        Object::new(brown, Sphere::new(100.0, Vector3f::new_xyz(0.0, -100.5, -1.0))),
-        Object::new(metal, Sphere::new(0.2, Vector3f::new_xyz(-0.5, 0.0, -1.0))),
-        Object::new(sun, Sphere::new(0.4, Vector3f::new_xyz(-1.0, 3.0, 0.0))),
+        Object::new(glass, Sphere::new(0.2).translate(0.0, 0.0, -1.0)),
+        Object::new(blue, Sphere::new(0.5).translate(1.0, 0.0, -1.5)),
+        Object::new(green, Sphere::new(0.3).translate(0.5, 0.0, -2.5)),
+        Object::new(brown, Sphere::new(100.0).translate(0.0, -100.5, -1.0)),
+        Object::new(metal, Sphere::new(0.2).translate(-0.5, 0.0, -1.0)),
+        Object::new(sun, Sphere::new(0.4).translate(-1.0, 3.0, 0.0)),
     ]);
 
     let tracer = DefaultTracer::new(&scn, Some(50), 

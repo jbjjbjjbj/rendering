@@ -4,9 +4,12 @@ pub mod shapes;
 mod scene;
 pub mod container;
 mod hittable;
+mod instancing;
+
 pub use scene::*;
 pub use hittable::{Intersection, Hittable, DynHittable};
 pub use shapes::Shape;
+pub use instancing::{Instance, Instancable};
 
 use std::sync::Arc;
 use crate::material::Material;
