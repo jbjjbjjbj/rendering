@@ -1,6 +1,8 @@
 mod sphere;
+mod rectangle;
 
 pub use sphere::Sphere;
+pub use rectangle::{Rect, Plane};
 
 use crate::world::{Hittable, Intersection};
 use crate::core::{Bound3f, Ray};

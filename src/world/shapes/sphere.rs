@@ -97,7 +97,6 @@ mod tests {
         };
 
         let dist = sph.intersect(&ray).unwrap();
-        println!("Yay {}", dist.t);
         assert!((dist.t - 1.732).abs() < 0.01);
     }
 }

@@ -5,7 +5,7 @@ use crate::Float;
 
 // TODO implement SampledSpectrum instead for nicer images
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Spectrum {
     c: [Float; 3],
 }

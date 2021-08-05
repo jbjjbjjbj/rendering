@@ -28,7 +28,6 @@ impl PathTracer<'_> {
         }
 
         if let Some(i) = self.scn.intersect(ray) {
-            // Extract material or default
             if let Some(mat) = i.m {
                 let mut col = Spectrum::ZERO;
 
