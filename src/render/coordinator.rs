@@ -52,7 +52,7 @@ impl Tiler {
         }
 
         // Convert the tile to xy in tilemap
-        let tile = Vector2i::new_xy(self.next_tile / self.tilemap_size.x, self.next_tile % self.tilemap_size.x);
+        let tile = Vector2i::new_xy(self.next_tile % self.tilemap_size.x, self.next_tile / self.tilemap_size.x);
         let tile_index = self.next_tile;
 
         self.next_tile += 1;
