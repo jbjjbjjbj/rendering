@@ -1,9 +1,9 @@
-use crate::world::{Object, Hittable, Intersection};
+use crate::world::{Object, Hittable, DynHittable, Intersection};
 use crate::core::{Bound3f, Ray};
 
 
 pub struct HittableList {
-    elems: Vec<Object>,
+    elems: Vec<DynHittable>,
 }
 
 impl HittableList {
@@ -11,8 +11,8 @@ impl HittableList {
         Self::default()
     }
 
-    pub fn add(&mut self, h: Object) {
-        self.elems.push(h);
+    pub fn add<T: Into<DynHittable>>(&mut self, h: T) {
+        self.elems.push(h.into());
     }
 }
 

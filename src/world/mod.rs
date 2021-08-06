@@ -8,7 +8,6 @@ mod instancing;
 
 pub use scene::*;
 pub use hittable::{Intersection, Hittable, DynHittable};
-pub use shapes::Shape;
 pub use instancing::{Instance, Instancable};
 
 use std::sync::Arc;
@@ -26,6 +25,12 @@ impl Object {
             mat,
             inner: inner.into(),
         }
+    }
+}
+
+impl Into<DynHittable> for Object {
+    fn into(self) -> DynHittable {
+        DynHittable::new(Box::new(self))
     }
 }
 
