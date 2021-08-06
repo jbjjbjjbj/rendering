@@ -6,6 +6,8 @@ const OUT_XY: Vector3f = Vector3f { x: 0.0, y: 0.0, z: 1.0 };
 
 pub enum Plane {
     XY,
+    XZ,
+    YZ,
 }
 
 pub struct Rect {
@@ -35,19 +37,20 @@ impl Rect {
 
 impl Hittable for Rect {
     fn intersect(&self, ray: &Ray) -> Option<Intersection> {
-        let t = (self.offset-ray.origin.z) / ray.direction.z;
+        let t = (self.offset - self.plane.translate(ray.origin).z)
+            / self.plane.translate(ray.direction).z;
         if t <= NEAR_ZERO {
             return None;
         }
 
-        let poi = ray.at(t);
+        let poi = self.plane.translate(ray.at(t));
         // Check if at is inside rectangle on plane
         if poi.x.abs() > (self.d1/2.0) || poi.y.abs() > (self.d2/2.0) {
             // No collision
             return None;
         }
 
-        Some(Intersection::new(OUT_XY, poi, ray, t))
+        Some(Intersection::new(self.plane.translate_inv(OUT_XY), self.plane.translate_inv(poi), ray, t))
     }
 
     fn bounding_box(&self) -> Bound3f {
@@ -68,9 +71,19 @@ impl Into<DynHittable> for Rect {
 impl Instancable for Rect {}
 
 impl Plane {
-    pub fn switch(&self, v: Vector3f) -> Vector3f {
+    pub fn translate(&self, v: Vector3f) -> Vector3f {
         match self {
             Plane::XY => v,
+            Plane::XZ => Vector3f::new_xyz(v.x, v.z, v.y),
+            Plane::YZ => Vector3f::new_xyz(v.y, v.z, v.x),
+        }
+    }
+
+    pub fn translate_inv(&self, v: Vector3f) -> Vector3f {
+        match self {
+            Plane::XY => v,
+            Plane::XZ => Vector3f::new_xyz(v.x, v.z, v.y),
+            Plane::YZ => Vector3f::new_xyz(v.z, v.x, v.y),
         }
     }
 }
